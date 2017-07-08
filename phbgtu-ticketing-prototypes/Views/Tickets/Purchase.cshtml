@@ -1,0 +1,108 @@
+
+@{
+    ViewData["Title"] = "Purchase";
+}
+
+<h2>Purchase</h2>
+
+<div class="form-wrapper">
+    <form method="post" action="" enctype="form/multi-part">
+        <fieldset id="ticket-quantity" class="form-horizontal">
+            <legend>{eventName} Ticket Purchase</legend>
+            <div class="control-group">
+                <label class="control-label" for="numTickets"><strong>How many tickets would you like to buy?</strong></label>
+                <div class="controls">
+                    <select name="numTickets"></select>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset id="ticket-data" class="form-horizontal hidden">
+            <legend>Attendee Details</legend>
+            <div id="attendee-data">
+
+            </div>
+            <button name="submit" type="submit" class="btn btn-primary">Purchase Now</button>
+        </fieldset>
+
+    </form>
+</div>
+
+<link rel="stylesheet" href="bootstrap.css" />
+<style>
+    .form-wrapper {
+        width: 75%;
+        margin: auto;
+    }
+
+    .form-horizontal {
+        border: 1px solid black;
+        padding: 15px;
+    }
+
+        .form-horizontal legend {
+            border-color: inherit;
+            text-align: center;
+        }
+
+    .hidden {
+        display: none;
+    }
+</style>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+$(function()
+	{
+		var maxTicketsPerCustomer = 100;
+		var option = "<option value=\"{#}\">{#}</option>";
+		for (var i = 0; i < 100; i++)
+		{
+			$("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
+		}
+	}
+);
+
+
+function getAttendeeField(index)
+{
+	var attendeeFieldContent = [
+		'<div class="control-group attendee-field" id="attendeeField{#}">',
+			'<label class="control-label" for="attendeeName[{#}]"><strong>Attendee #{#}\'s name</strong></label>',
+			'<div class="controls">',
+				'<input name="attendeeName[{#}]" type="text" class="input input-large">',
+			'</div>',
+		'</div>'
+	];
+
+	return attendeeFieldContent.join("").replace(/\{#\}/g, index);
+}
+
+$("select[name=numTickets]").change(function()
+	{
+		var attendeeFields = $(".attendee-field");
+		var attendeeFieldCount = attendeeFields.length;
+		var attendeeCount = $("option:selected",this).val();
+
+		if (attendeeCount == 0)
+			$("#ticket-data").addClass("hidden");
+		else
+			$("#ticket-data").removeClass("hidden");
+
+		if (attendeeFieldCount < attendeeCount)
+		{
+			for (var i = attendeeFieldCount; i < attendeeCount; i++)
+			{
+				$("#attendee-data").append(getAttendeeField(i+1));
+			}
+		}
+		else if (attendeeFieldCount > attendeeCount)
+		{
+			for (var i = attendeeFieldCount; i >= attendeeCount; i--)
+			{
+				$("#attendeeField" + (i+1)).remove();
+			}
+		}
+
+	}
+);
+</script>
