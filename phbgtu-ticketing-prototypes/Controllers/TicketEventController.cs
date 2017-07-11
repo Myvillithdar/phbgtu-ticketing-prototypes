@@ -1,5 +1,5 @@
 ﻿using System;
-namespace phbgtu-ticketing-prototypes.Controllers
+namespace phbgtu_ticketing_prototypes.Controllers
 {
 	public class TicketEventController
 {
