@@ -5,6 +5,8 @@
 
 <h2>Purchase</h2>
 
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
 <div class="form-wrapper">
     <form method="post" action="" enctype="multipart/form-data">
         <fieldset id="ticket-quantity" class="form-horizontal">
@@ -28,7 +30,43 @@
                 </div>
             </div>
             <br />
-            <button name="submit" type="submit" class="btn btn-primary">Purchase Now</button>
+            <div id="paypal-button"></div>
+
+            <script>
+                paypal.Button.render({
+
+                    env: 'sandbox', // Or 'sandbox', 'production'
+
+                    client: {
+                        sandbox: 'ATjufowsvc1ggtf5vMdvG1c9PdEo22wYdm3HgeLpV6gMiRcY6frfEwNzYzbdYZ-iJpawqJC9Ts4HlriJ',
+                        production: '<insert production client id>'
+                    },
+
+                    commit: true, // Show a 'Pay Now' button
+
+                    payment: function (data, actions) {
+                        // Set up the payment here
+                        return actions.payment.create({
+                            payment: {
+                                transactions: [
+                                    {
+                                        amount: { total: '0.01', currency: 'USD' }
+
+                                    }
+                                ]
+                            }
+                        });
+                    },
+
+                    onAuthorize: function (data, actions) {
+                        // Execute the payment here
+                        return actions.payment.execute().then(function () {
+                            window.alert('Payment Complete!');
+                        });
+                    }
+
+                }, '#paypal-button');
+            </script>
         </fieldset>
 
     </form>
