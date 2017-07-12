@@ -7,6 +7,7 @@ namespace phbgtu_ticketing_prototypes.Models
 {
     public class TicketEvent
     {
+        public int ID { get; set; }
         public TicketDesign ticketDesign { get; set; }
         public bool ticketSalesEnabled { get; set; }
         public string customMessage { get; set; }

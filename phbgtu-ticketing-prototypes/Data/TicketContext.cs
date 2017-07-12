@@ -15,5 +15,6 @@ namespace phbgtu_ticketing_prototypes.Data
 
 		public DbSet<Ticket> Tickets { get; set; }
 		public DbSet<TicketType> TicketTypes { get; set; }
+        public DbSet<TicketEvent> TicketEvents { get; set; }
     }
 }
