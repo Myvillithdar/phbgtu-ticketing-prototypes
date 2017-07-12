@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 
+using phbgtu_ticketing_prototypes.Models; //TicketEvent
+
 namespace phbgtu_ticketing_prototypes
 {
     public class Startup
@@ -29,6 +31,9 @@ namespace phbgtu_ticketing_prototypes
             services.AddMvc();
 
             services.AddDbContext<TicketContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TicketContext")));
+
+            services.AddDbContext<phbgtu_ticketing_prototypes_Context>(options =>
+			    options.UseSqlite("Data Source=phbgtu_ticketing_prototypes_Context.db")); //TicketEvent
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +60,10 @@ namespace phbgtu_ticketing_prototypes
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
+            //DBinitialize.EnsureCreated(app.ApplicationServices);
+
         }
     }
 }
