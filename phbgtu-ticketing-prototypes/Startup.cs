@@ -60,6 +60,10 @@ namespace phbgtu_ticketing_prototypes
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
+            //DBinitialize.EnsureCreated(app.ApplicationServices);
+
         }
     }
 }
