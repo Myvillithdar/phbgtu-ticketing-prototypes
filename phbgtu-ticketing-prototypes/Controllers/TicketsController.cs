@@ -27,4 +27,19 @@ namespace phbgtu_ticketing_prototypes.Controllers
             return View();
         }
     }
+		public async Task<IActionResult> Details(int? id)
+		{
+			if (id == null) {
+				return NotFound();
+			}
+
+			var ticket = await _context.Tickets
+			    .SingleOrDefaultAsync(m => m.TicketID == id);
+			if (ticket == null) {
+				return NotFound();
+			}
+
+			return View(ticket);
+		}
+	}
 }
