@@ -7,13 +7,14 @@ namespace phbgtu_ticketing_prototypes.Models
 {
     public class CustomFormField
     {
-        private string formFieldLabel;
-        private string formFiledDataType;
-        private bool formFieldRequired;
+		public int CustomFormFieldID { get; set; }
+		public string formFieldLabel { get; set; }
+		public string formFiledDataType { get; set; }
+		public bool formFieldRequired { get; set; }
 
-        public CustomFormField()
-        {
+		public CustomFormField()
+		{
 
-        }
+		}
     }
 }

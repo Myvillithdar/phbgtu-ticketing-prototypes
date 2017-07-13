@@ -7,14 +7,23 @@ namespace phbgtu_ticketing_prototypes.Models
 {
     public class TicketDesignElement
     {
-        private string elementName;
-        private string elementType;
-        private string elementContent;
-        private int[] xyCoordinates;
-        private int zIndex;
-        private int[] dimensions;
+		public int TicketDesignElementID { get; set; }
+		public string elementName { get; set; }
+		public string elementType { get; set; }
+		public string elementContent { get; set; }
+		public int xyCoordinates { get; set; }
+		public int zIndex { get; set; }
+		public int dimensions { get; set; }
 
-        public TicketDesignElement()
+		/*
+		 * TODO I know xyCoordinates and dimensions are supposed to be arrays,
+		 * but the member fields above get stored directly in the database,
+		 * so they need to be database-compatible types.  We'll need a getter 
+		 * function or something to put the individual numbers together into an
+		 * array.
+		 */
+
+		public TicketDesignElement()
         {
 
         }
@@ -33,12 +42,12 @@ namespace phbgtu_ticketing_prototypes.Models
 
         public void SetCoordinates(int x, int y)
         {
-            this.xyCoordinates = new int[2] { x, y };
+        //    this.xyCoordinates = new int[2] { x, y };
         }
 
         public void SetDimensions(int length, int width)
         {
-            this.dimensions = new int[2] { length, width };
+        //    this.dimensions = new int[2] { length, width };
         }
     }
 }

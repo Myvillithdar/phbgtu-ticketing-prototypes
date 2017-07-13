@@ -7,41 +7,42 @@ namespace phbgtu_ticketing_prototypes.Models
 {
     public class TicketDesign
     {
-    private string designName;
-    private string designDescription;
-    private TicketDesignElement[] elements;
-    private String eventTicketCode;
-    private CustomFormField[] customFormFields;
+		public int TicketDesignID { get; set; }
+		public string designName { get; set; }
+		public string designDescription { get; set; }
+		public TicketDesignElement[] elements { get; set; }
+		public String eventTicketCode { get; set; }
+		public CustomFormField[] customFormFields { get; set; }
 
-    public TicketDesign()
-    {
+		public TicketDesign()
+	    {
 
-    }
+	    }
 
 
-    public void DoLayout()
-    {
+	    public void DoLayout()
+	    {
 
-    }
+	    }
 
-    public void SetBackGround()
-    {
+	    public void SetBackGround()
+	    {
 
-    }
+	    }
 
-    public TicketDesignElement[] GetTicketDesignElements()
-    {
-        return new TicketDesignElement[1];
-    }
+	    public TicketDesignElement[] GetTicketDesignElements()
+	    {
+		   return new TicketDesignElement[1];
+	    }
 
-    public void UpdateTicketDesignElement()
-    {
+	    public void UpdateTicketDesignElement()
+	    {
 
-    }
+	    }
 
-    public void UpdateCustomFormField()
-    {
+	    public void UpdateCustomFormField()
+	    {
 
-    }
-}
+	    }
+	}
 }
