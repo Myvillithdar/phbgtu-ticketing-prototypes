@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
+using phbgtu_ticketing_prototypes.ViewModels;
+using System.Linq;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -46,13 +48,18 @@ namespace phbgtu_ticketing_prototypes.Controllers
 				return NotFound();
 			}
 
-			var ticketEvent = await _context.TicketEvents
-			    .SingleOrDefaultAsync(m => m.TicketEventID == id);
-			if (ticketEvent == null) {
+			var viewModel = new TicketEventDetailsData();
+			viewModel.ticketEvent = await _context.TicketEvents
+				.Include(e => e.tickets)
+				.SingleOrDefaultAsync(m => m.TicketEventID == id);
+
+			if (viewModel.ticketEvent == null) {
 				return NotFound();
 			}
 
-			return View(ticketEvent);
+			viewModel.tickets = viewModel.ticketEvent.tickets;
+
+			return View(viewModel);
 		}
 	}
 }
