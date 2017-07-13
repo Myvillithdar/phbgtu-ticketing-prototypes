@@ -3,9 +3,9 @@
     ViewData["Title"] = "Purchase";
 }
 
-<h2>Purchase</h2>
+        <h2>Purchase</h2>
 
-<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+            <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
 <div class="form-wrapper">
     <form method="post" action="" enctype="multipart/form-data">
@@ -39,7 +39,6 @@
             <br />
             <br/>
             <div id="paypal-button"></div> 
-
 
             <script>
                 paypal.Button.render({
@@ -104,9 +103,11 @@
 </style>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-
+    $(function () { 
+        $("#ticket-data").addClass("hidden");   //This is the code that was added for temp fix 
+    });
 $(function()
-	{
+{
 		var maxTicketsPerCustomer = 100;
         var option = "<option value=\"{#}\">{#}</option>";
         $("select[name=numTickets]").append(option.replace(/\{#\}/g, ' '));
@@ -115,9 +116,9 @@ $(function()
 			$("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
         }
         $("select[name=numTickets]").change();
+               
 	}
-);
-
+    );
 
 function getAttendeeField(index)
 {
@@ -134,7 +135,8 @@ function getAttendeeField(index)
     }
     var PayPalFinalAmount = 0;  //used to globally get the amount of attendees 
 $("select[name=numTickets]").change(function()
-	{
+{
+    
 		var attendeeFields = $(".attendee-field");
 		var attendeeFieldCount = attendeeFields.length;
         var attendeeCount = $("option:selected", this).val();
