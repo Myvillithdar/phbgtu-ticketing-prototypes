@@ -22,7 +22,7 @@
                 </div>
             </div>
         </fieldset>
-        <fieldset id="ticket-data" class="form-horizontal">
+        <fieldset id="ticket-data" class="form-horizontal hidden">
             <legend>Attendee Details</legend>
             <div id="attendee-data">
                 <div class="control-group attendee-field" id="attendeeField1">
@@ -111,9 +111,9 @@ $(function()
 		var maxTicketsPerCustomer = 100;
         var option = "<option value=\"{#}\">{#}</option>";
         $("select[name=numTickets]").append(option.replace(/\{#\}/g, ' '));
-		for (var i = 1; i < maxTicketsPerCustomer; i++)
-		{
-			$("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
+		for (var i = 1; i <= maxTicketsPerCustomer; i++)
+        {
+            $("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
         }
         $("select[name=numTickets]").change();
                
