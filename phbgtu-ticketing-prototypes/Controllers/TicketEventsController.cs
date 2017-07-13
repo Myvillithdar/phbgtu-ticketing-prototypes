@@ -47,7 +47,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 			}
 
 			var ticketEvent = await _context.TicketEvents
-			    .SingleOrDefaultAsync(m => m.ID == id);
+			    .SingleOrDefaultAsync(m => m.TicketEventID == id);
 			if (ticketEvent == null) {
 				return NotFound();
 			}

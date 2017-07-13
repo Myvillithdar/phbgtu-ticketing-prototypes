@@ -8,6 +8,9 @@ namespace phbgtu_ticketing_prototypes.Models
 		public int EventTicketNumber { get; set; }
 		public string EventTicketCode { get; set; }
 
+		public int TicketEventID { get; set; }
+		public TicketEvent ticketEvent { get; set; }
+
         public Ticket()
         {
         }

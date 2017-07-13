@@ -7,12 +7,14 @@ namespace phbgtu_ticketing_prototypes.Models
 {
     public class TicketEvent
     {
-        public int ID { get; set; }
+        public int TicketEventID { get; set; }
         public TicketDesign ticketDesign { get; set; }
         public bool ticketSalesEnabled { get; set; }
         public string customMessage { get; set; }
         public DateTime beginSales { get; set; }
         public DateTime endSales { get; set; }
+
+	   public ICollection<Ticket> tickets { get; set; }
 
         public TicketEvent()
         {
