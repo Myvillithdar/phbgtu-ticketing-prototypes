@@ -12,7 +12,11 @@
         <fieldset id="ticket-quantity" class="form-horizontal">
             <legend>{eventName} Ticket Purchase</legend>
             <div class="control-group">
+                <label class="control-label"><strong>Tickets are $5 dollars for the selected event</strong></label>
+                <br />                
                 <label class="control-label" for="numTickets"><strong>How many tickets would you like to buy?</strong></label>
+                <br/>
+                <br/>
                 <div class="controls">
                     <select name="numTickets"></select>
                 </div>
@@ -30,7 +34,12 @@
                 </div>
             </div>
             <br />
-            <div id="paypal-button"></div>
+            <label class="control-label"><strong>This is your price:</strong></label>
+            <p id="price"></p>
+            <br />
+            <br/>
+            <div id="paypal-button"></div> 
+
 
             <script>
                 paypal.Button.render({
@@ -50,7 +59,7 @@
                             payment: {
                                 transactions: [
                                     {
-                                        amount: { total: '0.01', currency: 'USD' }
+                                        amount: { total: calculatePrice(), currency: 'USD' }
 
                                     }
                                 ]
@@ -99,7 +108,8 @@
 $(function()
 	{
 		var maxTicketsPerCustomer = 100;
-		var option = "<option value=\"{#}\">{#}</option>";
+        var option = "<option value=\"{#}\">{#}</option>";
+        $("select[name=numTickets]").append(option.replace(/\{#\}/g, ' '));
 		for (var i = 1; i < maxTicketsPerCustomer; i++)
 		{
 			$("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
@@ -121,14 +131,16 @@ function getAttendeeField(index)
 	];
 
 	return attendeeFieldContent.join("").replace(/\{#\}/g, index);
-}
-
+    }
+    var PayPalFinalAmount = 0;  //used to globally get the amount of attendees 
 $("select[name=numTickets]").change(function()
 	{
 		var attendeeFields = $(".attendee-field");
 		var attendeeFieldCount = attendeeFields.length;
-		var attendeeCount = $("option:selected",this).val();
-
+        var attendeeCount = $("option:selected", this).val();
+        document.getElementById("price").innerHTML = "$" + (attendeeCount * 5);
+        PayPalFinalAmount = (attendeeCount * 5);
+       
 		if (attendeeCount == 0)
 			$("#ticket-data").addClass("hidden");
 		else
@@ -147,8 +159,16 @@ $("select[name=numTickets]").change(function()
 			{
 				$("#attendeeField" + (i+1)).remove();
 			}
-		}
+        }        
+}
 
-	}
-);
+    );
+
+    function calculatePrice() {
+        var attendeeCount = $("option:selected", this).val();
+        var CountAfterMath = (attendeeCount * 5);
+        var FinalCount = (PayPalFinalAmount + ".00").toString();
+        return FinalCount;
+    }   
+
 </script>
