@@ -1,1 +1,60 @@
-﻿@model IEnumerable<phbgtu_ticketing_prototypes.Models.TicketEvent>  @{     ViewData["Title"] = "Index"; }  <h2>Index</h2>  <p>     <a asp-action="Create">Create New</a> </p> <table class="table">     <thead>         <tr>                 <th>                     @Html.DisplayNameFor(model => model.ticketDesign)                 </th>                 <th>                     @Html.DisplayNameFor(model => model.ticketSalesEnabled)                 </th>                 <th>                     @Html.DisplayNameFor(model => model.customMessage)                 </th>                 <th>                     @Html.DisplayNameFor(model => model.beginSales)                 </th>               <th>                     @Html.DisplayNameFor(model => model.endSales)                 </th>             <th></th>         </tr>     </thead>     <tbody> @foreach (var item in Model) {         <tr>             <td>                 @Html.DisplayFor(modelItem => item.ticketDesign)             </td>           <td>                 @Html.DisplayFor(modelItem => item.ticketSalesEnabled)             </td>           <td>                 @Html.DisplayFor(modelItem => item.customMessage)             </td>             <td>                 @Html.DisplayFor(modelItem => item.beginSales)             </td>             <td>                 @Html.DisplayFor(modelItem => item.endSales)             </td>             <td>                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>             </td>         </tr> }     </tbody> </table>  
+﻿@model IEnumerable<phbgtu_ticketing_prototypes.Models.TicketEvent>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ticketDesign)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ticketSalesEnabled)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.customMessage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.beginSales)
+                </th>
+              <th>
+                    @Html.DisplayNameFor(model => model.endSales)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ticketDesign)
+            </td>
+          <td>
+                @Html.DisplayFor(modelItem => item.ticketSalesEnabled)
+            </td>
+          <td>
+                @Html.DisplayFor(modelItem => item.customMessage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.beginSales)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.endSales)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TicketEventID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TicketEventID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TicketEventID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
