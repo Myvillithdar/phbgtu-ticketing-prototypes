@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace phbgtu_ticketing_prototypes.Models
 {
@@ -8,7 +9,8 @@ namespace phbgtu_ticketing_prototypes.Models
 		public int EventID { get; set; }
 		public string TicketTypeName { get; set; }
 		public int TicketTypeLimit { get; set; }
-		//TODO how to set up a money field?
+		[Column(TypeName="money")]
+		public decimal Price { get; set; }
 
 		public ICollection<Ticket> Tickets { get; set; }
 		public TicketEvent ticketEvent { get; set; }
