@@ -11,5 +11,7 @@ namespace phbgtu_ticketing_prototypes.Models
 		//TODO how to set up a money field?
 
 		public ICollection<Ticket> Tickets { get; set; }
-    }
+		public TicketEvent ticketEvent { get; set; }
+
+	}
 }
