@@ -1,6 +1,48 @@
-﻿
+﻿@model phbgtu_ticketing_prototypes.Models.Ticket
+
+
+
 @{
     ViewData["Title"] = "Confirmation";
 }
+
 <h2>Confrimation</h2>
+
+<p>The value of your ticketID is:  @ViewData["Message"]</p>
+
+
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicketNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicketNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicketCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicketCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketEventID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketEventID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TicketID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
 
