@@ -47,13 +47,15 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 return NotFound();
             }
 
-            return View(ticket);
 
 
             //display the ticketID passed in
-            ViewData["Message"] =  ID;
+            ViewData["Message"] = ID;
 
-            return View();
+            return View(ticket);
+
+
+            
         }
 
 
