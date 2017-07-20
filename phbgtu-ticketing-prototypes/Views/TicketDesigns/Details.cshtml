@@ -1,0 +1,36 @@
+@model phbgtu_ticketing_prototypes.Models.TicketDesign
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TicketDesign</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DesignName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DesignName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DesignDescription)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DesignDescription)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicketCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicketCode)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TicketDesignID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

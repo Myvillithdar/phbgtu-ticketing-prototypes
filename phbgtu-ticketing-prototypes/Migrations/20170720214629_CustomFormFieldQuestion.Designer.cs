@@ -8,40 +8,31 @@ using phbgtu_ticketing_prototypes.Data;
 namespace phbgtu_ticketing_prototypes.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    partial class TicketContextModelSnapshot : ModelSnapshot
+    [Migration("20170720214629_CustomFormFieldQuestion")]
+    partial class CustomFormFieldQuestion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.CustomFormFieldDatatype", b =>
-                {
-                    b.Property<int>("CustomFormFieldDatatypeID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("DatatypeName");
-
-                    b.HasKey("CustomFormFieldDatatypeID");
-
-                    b.ToTable("CustomFormFieldDatatype");
-                });
 
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.CustomFormFieldQuestion", b =>
                 {
                     b.Property<int>("CustomFormFieldQuestionID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("FormFieldDatatypeID");
+                    b.Property<string>("FormFieldDataType");
 
                     b.Property<string>("FormFieldLabel");
 
                     b.Property<bool>("FormFieldRequired");
 
+                    b.Property<int?>("TicketDesignID");
+
                     b.HasKey("CustomFormFieldQuestionID");
 
-                    b.HasIndex("FormFieldDatatypeID");
+                    b.HasIndex("TicketDesignID");
 
                     b.ToTable("CustomFormFields");
                 });
@@ -73,11 +64,11 @@ namespace phbgtu_ticketing_prototypes.Migrations
                     b.Property<int>("TicketDesignID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("DesignDescription");
+                    b.Property<string>("designDescription");
 
-                    b.Property<string>("DesignName");
+                    b.Property<string>("designName");
 
-                    b.Property<string>("EventTicketCode");
+                    b.Property<string>("eventTicketCode");
 
                     b.HasKey("TicketDesignID");
 
@@ -89,23 +80,23 @@ namespace phbgtu_ticketing_prototypes.Migrations
                     b.Property<int>("TicketDesignElementID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ElementContent");
+                    b.Property<int?>("TicketDesignID");
 
-                    b.Property<string>("ElementName");
+                    b.Property<int>("dimensions");
 
-                    b.Property<string>("ElementType");
+                    b.Property<string>("elementContent");
 
-                    b.Property<int>("XCoordinate");
+                    b.Property<string>("elementName");
 
-                    b.Property<int>("XDimension");
+                    b.Property<string>("elementType");
 
-                    b.Property<int>("YCoordinate");
+                    b.Property<int>("xyCoordinates");
 
-                    b.Property<int>("YDimension");
-
-                    b.Property<int>("ZIndex");
+                    b.Property<int>("zIndex");
 
                     b.HasKey("TicketDesignElementID");
+
+                    b.HasIndex("TicketDesignID");
 
                     b.ToTable("TicketDesignElements");
                 });
@@ -150,10 +141,9 @@ namespace phbgtu_ticketing_prototypes.Migrations
 
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.CustomFormFieldQuestion", b =>
                 {
-                    b.HasOne("phbgtu_ticketing_prototypes.Models.CustomFormFieldDatatype", "FormFieldDatatype")
-                        .WithMany()
-                        .HasForeignKey("FormFieldDatatypeID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketDesign")
+                        .WithMany("customFormFields")
+                        .HasForeignKey("TicketDesignID");
                 });
 
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.Ticket", b =>
@@ -166,6 +156,13 @@ namespace phbgtu_ticketing_prototypes.Migrations
                     b.HasOne("phbgtu_ticketing_prototypes.Models.TicketType")
                         .WithMany("Tickets")
                         .HasForeignKey("TicketTypeID");
+                });
+
+            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.TicketDesignElement", b =>
+                {
+                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketDesign")
+                        .WithMany("elements")
+                        .HasForeignKey("TicketDesignID");
                 });
 
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.TicketEvent", b =>
