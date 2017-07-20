@@ -27,6 +27,18 @@ namespace phbgtu_ticketing_prototypes.Controllers
         {
             return View();
 		}
+
+        public IActionResult PurchaseConfirmation(int ticketID) //pass in an ID to find the specific Ticket
+        {
+
+            //read in from database
+
+            ViewData["Message"] =  ticketID;
+
+            return View();
+        }
+
+
 		/*public IActionResult Create()
 		{
 			return View();
