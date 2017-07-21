@@ -14,7 +14,7 @@
         <div class="form-group">
             <label asp-for="TicketDesignID" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="TicketDesignID" asp-value="ViewBag.TicketDesignID" class="form-control" />
+                <input asp-for="TicketDesignID" class="form-control" />
                 <span asp-validation-for="TicketDesignID" class="text-danger"></span>
             </div>
         </div>
@@ -51,3 +51,13 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+
+@if (Model != null)
+{
+    <script type="text/javascript">
+        var eventTicketID = $("#TicketDesignID");
+        $(eventTicketID).val(@Model.TicketDesignID);
+        // eventTicketID.children("[value=@Model.TicketDesignID]").prop("selected", true);
+        eventTicketID.prop("readonly", true);
+    </script>
+}

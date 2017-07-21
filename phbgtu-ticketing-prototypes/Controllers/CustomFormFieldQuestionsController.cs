@@ -48,9 +48,15 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // GET: CustomFormFieldQuestions/Create
         public IActionResult Create(int? id)
         {
-            ViewData["TicketDesignID"] = id;
+            CustomFormFieldQuestion customFormFieldQuestion = null;
+            if (id != null)
+            {
+                customFormFieldQuestion = new CustomFormFieldQuestion();
+                customFormFieldQuestion.TicketDesignID = (int)id;
+            }
+
             ViewData["FormFieldDatatypeID"] = new SelectList(_context.CustomFormFieldDatatypes, "CustomFormFieldDatatypeID", "CustomFormFieldDatatypeID");
-            return View();
+            return View(customFormFieldQuestion);
         }
 
         // POST: CustomFormFieldQuestions/Create

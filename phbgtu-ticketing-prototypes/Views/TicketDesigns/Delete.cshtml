@@ -30,6 +30,12 @@
         <dd>
             @Html.DisplayFor(model => model.EventTicketCode)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventID)
+        </dd>
     </dl>
     
     <form asp-action="Delete">

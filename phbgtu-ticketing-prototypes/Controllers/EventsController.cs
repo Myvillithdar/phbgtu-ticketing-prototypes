@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
 using phbgtu_ticketing_prototypes.ViewModels;
-using System.Linq;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace phbgtu_ticketing_prototypes.Controllers
 {
@@ -14,63 +15,156 @@ namespace phbgtu_ticketing_prototypes.Controllers
     {
         private readonly TicketContext _context;
 
-        public EventsController(TicketContext context) {
-            _context = context;
+        public EventsController(TicketContext context)
+        {
+            _context = context;    
         }
 
-        // GET: /<controller>/
+        // GET: Events
         public async Task<IActionResult> Index()
         {
             return View(await _context.Events.ToListAsync());
         }
 
-	   public IActionResult Create()
-	   {
-			return View();
-		}
+        // GET: Events/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(
-			[Bind("ID,ticketSalesEnabled,customMessage,beginSales,endSales")] Event ticketEvent)
-		{
-			if (ModelState.IsValid) {
-				_context.Add(ticketEvent);
-				await _context.SaveChangesAsync();
-				return RedirectToAction("Index");
-			}
-			return View(ticketEvent);
-		}
+            var viewModel = new TicketEventDetailsData();
+            viewModel.ticketEvent = await _context.Events
+                .SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.ticketDesign = await _context.TicketDesigns
+                .SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.eventTickets = _context.EventTickets
+                .Where(m => m.TicketDesignID == viewModel.ticketDesign.TicketDesignID);
+            if (viewModel.eventTickets != null)
+            {
+                viewModel.tickets = new List<Ticket>();
+                foreach (var eventTicket in viewModel.eventTickets)
+                {
+                    viewModel.tickets = Enumerable.Concat(viewModel.tickets, _context.Tickets.Where(m => m.EventTicketID == eventTicket.EventTicketID));
+                }
+            }
 
-		public async Task<IActionResult> Edit(int? id)
-		{
-			if (id == null) {
-				return NotFound();
-			}
+            // var @event = await _context.Events
+            //   .SingleOrDefaultAsync(m => m.EventID == id);
+            if (viewModel == null)
+            {
+                return NotFound();
+            }
 
-			Event model = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
+            return View(viewModel);
+        }
 
-			return View(model);
-		}
+        // GET: Events/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-		public async Task<IActionResult> Details(int? id)
-		{
-			if (id == null) {
-				return NotFound();
-			}
+        // POST: Events/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("EventID,EventName,TicketSalesEnabled,CustomMessage,BeginSales,EndSales")] Event @event)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(@event);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(@event);
+        }
 
-			var viewModel = new TicketEventDetailsData();
-//			viewModel.ticketEvent = await _context.Events
-//				.Include(e => e.tickets)
-//				.SingleOrDefaultAsync(m => m.TicketEventID == id);
+        // GET: Events/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-			if (viewModel.ticketEvent == null) {
-				return NotFound();
-			}
+            var @event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+            return View(@event);
+        }
 
-//			viewModel.tickets = viewModel.ticketEvent.tickets;
+        // POST: Events/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("EventID,EventName,TicketSalesEnabled,CustomMessage,BeginSales,EndSales")] Event @event)
+        {
+            if (id != @event.EventID)
+            {
+                return NotFound();
+            }
 
-			return View(viewModel);
-		}
-	}
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(@event);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EventExists(@event.EventID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View(@event);
+        }
+
+        // GET: Events/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Events
+                .SingleOrDefaultAsync(m => m.EventID == id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            return View(@event);
+        }
+
+        // POST: Events/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var @event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
+            _context.Events.Remove(@event);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        private bool EventExists(int id)
+        {
+            return _context.Events.Any(e => e.EventID == id);
+        }
+    }
 }

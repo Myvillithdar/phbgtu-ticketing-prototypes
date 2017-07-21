@@ -22,7 +22,8 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // GET: TicketDesigns
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TicketDesigns.ToListAsync());
+            var ticketContext = _context.TicketDesigns.Include(t => t.Event);
+            return View(await ticketContext.ToListAsync());
         }
 
         // GET: TicketDesigns/Details/5
@@ -34,6 +35,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             }
 
             var ticketDesign = await _context.TicketDesigns
+                .Include(t => t.Event)
                 .SingleOrDefaultAsync(m => m.TicketDesignID == id);
             if (ticketDesign == null)
             {
@@ -45,7 +47,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             {
                 ticketDesign.CustomFormFields = _context.CustomFormFieldQuestions
                     .Where(m => m.TicketDesignID == id);
-                for (int i = 0; i < ticketDesign.CustomFormFields.Count(); i++ )
+                for (int i = 0; i < ticketDesign.CustomFormFields.Count(); i++)
                 {
                     ticketDesign.CustomFormFields.ElementAt(i).FormFieldDataOptions = _context.CustomFormFieldDataOptions
                         .Where(m => m.CustomFormFieldQuestionID == ticketDesign.CustomFormFields.ElementAt(i).CustomFormFieldQuestionID);
@@ -64,6 +66,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // GET: TicketDesigns/Create
         public IActionResult Create()
         {
+            ViewData["EventID"] = new SelectList(_context.Events, "EventID", "EventID");
             return View();
         }
 
@@ -72,7 +75,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TicketDesignID,DesignName,DesignDescription,EventTicketCode")] TicketDesign ticketDesign)
+        public async Task<IActionResult> Create([Bind("TicketDesignID,EventID,DesignName,DesignDescription,EventTicketCode")] TicketDesign ticketDesign)
         {
             if (ModelState.IsValid)
             {
@@ -80,6 +83,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewData["EventID"] = new SelectList(_context.Events, "EventID", "EventID", ticketDesign.EventID);
             return View(ticketDesign);
         }
 
@@ -96,6 +100,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             {
                 return NotFound();
             }
+            ViewData["EventID"] = new SelectList(_context.Events, "EventID", "EventID", ticketDesign.EventID);
             return View(ticketDesign);
         }
 
@@ -104,7 +109,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TicketDesignID,DesignName,DesignDescription,EventTicketCode")] TicketDesign ticketDesign)
+        public async Task<IActionResult> Edit(int id, [Bind("TicketDesignID,EventID,DesignName,DesignDescription,EventTicketCode")] TicketDesign ticketDesign)
         {
             if (id != ticketDesign.TicketDesignID)
             {
@@ -131,6 +136,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 }
                 return RedirectToAction("Index");
             }
+            ViewData["EventID"] = new SelectList(_context.Events, "EventID", "EventID", ticketDesign.EventID);
             return View(ticketDesign);
         }
 
@@ -143,6 +149,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             }
 
             var ticketDesign = await _context.TicketDesigns
+                .Include(t => t.Event)
                 .SingleOrDefaultAsync(m => m.TicketDesignID == id);
             if (ticketDesign == null)
             {
