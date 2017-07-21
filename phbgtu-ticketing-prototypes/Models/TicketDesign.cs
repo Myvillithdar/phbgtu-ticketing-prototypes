@@ -9,12 +9,14 @@ namespace phbgtu_ticketing_prototypes.Models
     public class TicketDesign
     {
 		public int TicketDesignID { get; set; }
+		public int EventID { get; set; }
 		public string DesignName { get; set; }
 		public string DesignDescription { get; set; }
 		public String EventTicketCode { get; set; }
 
-		public int EventID { get; set; }
+        [ForeignKey("EventID")]
 		public Event Event { get; set; }
+
         [NotMapped]
 		public IEnumerable<TicketDesignElement> Elements { get; set; }
 

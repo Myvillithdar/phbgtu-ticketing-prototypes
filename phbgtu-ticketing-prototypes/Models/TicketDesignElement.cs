@@ -8,6 +8,7 @@ namespace phbgtu_ticketing_prototypes.Models
     public class TicketDesignElement
     {
 		public int TicketDesignElementID { get; set; }
+        public int TicketDesignID { get; set; }
 		public string ElementName { get; set; }
 		public string ElementType { get; set; }
 		public string ElementContent { get; set; }

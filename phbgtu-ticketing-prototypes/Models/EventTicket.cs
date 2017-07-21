@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,14 +9,22 @@ namespace phbgtu_ticketing_prototypes.Models
 {
     public class EventTicket
     {
-		public int eventTicketID { get; set; }
-		public int quantityAvailable { get; set; }
-		[Column(TypeName = "money")]
-		public decimal Price { get; set; }
+		public int EventTicketID { get; set; }
+		public int QuantityAvailable { get; set; }
+        public int TicketTypeID { get; set; }
+        public int TicketDesignID { get; set; }
 
-		public TicketType ticketType { get; set; }
-		public TicketDesign ticketDesign { get; set; }
-		public ICollection<Ticket> tickets { get; set; }
+		[DataType(DataType.Currency)]
+		public decimal TicketPrice { get; set; }
+
+        [ForeignKey("TicketTypeID")]
+		public TicketType TicketType { get; set; }
+
+        [ForeignKey("TicketDesignID")]
+		public TicketDesign TicketDesign { get; set; }
+
+        [NotMapped]
+		public ICollection<Ticket> Tickets { get; set; }
 
 		public EventTicket() {
 

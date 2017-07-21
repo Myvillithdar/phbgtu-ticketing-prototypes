@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,13 +9,14 @@ namespace phbgtu_ticketing_prototypes.Models
 	public class Event
 	{
 		public int EventID { get; set; }
-		public string eventName { get; set; }
-		public bool ticketSalesEnabled { get; set; }
-		public string customMessage { get; set; }
-		public DateTime beginSales { get; set; }
-		public DateTime endSales { get; set; }
+		public string EventName { get; set; }
+		public bool TicketSalesEnabled { get; set; }
+		public string CustomMessage { get; set; }
+		public DateTime BeginSales { get; set; }
+		public DateTime EndSales { get; set; }
 
-		public TicketDesign ticketDesign { get; set; }
+        [NotMapped]
+		public TicketDesign TicketDesign { get; set; }
 
 		public Event()
 		{

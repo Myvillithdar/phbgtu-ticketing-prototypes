@@ -55,7 +55,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 
 			Ticket ticket = new Ticket();
 		//	ticket = id.Value;
-			ticket.EventTicketCode = "AZ6"; //TODO fix this
+		//	ticket.EventTicketCode = "AZ6"; //TODO fix this
 			_context.Add(ticket);
 			_context.SaveChanges();
 			return RedirectToAction("Details", "TicketEvents", new { id = id });
