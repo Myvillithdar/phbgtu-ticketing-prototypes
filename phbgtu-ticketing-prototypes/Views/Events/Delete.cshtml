@@ -1,4 +1,4 @@
-﻿@model phbgtu_ticketing_prototypes.Models.TicketEvent
+﻿@model phbgtu_ticketing_prototypes.Models.Event
 
 @{
     ViewData["Title"] = "Delete";
@@ -17,6 +17,12 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ticketDesign)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.eventName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.eventName)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.ticketSalesEnabled)

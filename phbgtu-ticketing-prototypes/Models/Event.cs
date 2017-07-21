@@ -5,14 +5,25 @@ using System.Threading.Tasks;
 
 namespace phbgtu_ticketing_prototypes.Models
 {
-    public class Event
-    {
-        public int EventID { get; set; }
-        public string EventName { get; set; }
+	public class Event
+	{
+		public int EventID { get; set; }
+		public string eventName { get; set; }
+		public bool ticketSalesEnabled { get; set; }
+		public string customMessage { get; set; }
+		public DateTime beginSales { get; set; }
+		public DateTime endSales { get; set; }
 
-        public Event()
-        {
+		public TicketDesign ticketDesign { get; set; }
 
-        }
-    }
+		public Event()
+		{
+
+		}
+
+		public string GenerateSalesReport()
+		{
+			return "";
+		}
+	}
 }
