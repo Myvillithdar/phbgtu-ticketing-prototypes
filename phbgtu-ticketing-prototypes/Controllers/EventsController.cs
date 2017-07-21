@@ -10,18 +10,18 @@ using System.Linq;
 
 namespace phbgtu_ticketing_prototypes.Controllers
 {
-    public class TicketEventsController : Controller
+    public class EventsController : Controller
     {
         private readonly TicketContext _context;
 
-        public TicketEventsController(TicketContext context) {
+        public EventsController(TicketContext context) {
             _context = context;
         }
 
         // GET: /<controller>/
         public async Task<IActionResult> Index()
         {
-            return View(await _context.TicketEvents.ToListAsync());
+            return View(await _context.Events.ToListAsync());
         }
 
 	   public IActionResult Create()
@@ -32,7 +32,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(
-			[Bind("ID,ticketSalesEnabled,customMessage,beginSales,endSales")] TicketEvent ticketEvent)
+			[Bind("ID,ticketSalesEnabled,customMessage,beginSales,endSales")] Event ticketEvent)
 		{
 			if (ModelState.IsValid) {
 				_context.Add(ticketEvent);
@@ -42,6 +42,17 @@ namespace phbgtu_ticketing_prototypes.Controllers
 			return View(ticketEvent);
 		}
 
+		public async Task<IActionResult> Edit(int? id)
+		{
+			if (id == null) {
+				return NotFound();
+			}
+
+			Event model = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
+
+			return View(model);
+		}
+
 		public async Task<IActionResult> Details(int? id)
 		{
 			if (id == null) {
@@ -49,15 +60,15 @@ namespace phbgtu_ticketing_prototypes.Controllers
 			}
 
 			var viewModel = new TicketEventDetailsData();
-			viewModel.ticketEvent = await _context.TicketEvents
-				.Include(e => e.tickets)
-				.SingleOrDefaultAsync(m => m.TicketEventID == id);
+//			viewModel.ticketEvent = await _context.Events
+//				.Include(e => e.tickets)
+//				.SingleOrDefaultAsync(m => m.TicketEventID == id);
 
 			if (viewModel.ticketEvent == null) {
 				return NotFound();
 			}
 
-			viewModel.tickets = viewModel.ticketEvent.tickets;
+//			viewModel.tickets = viewModel.ticketEvent.tickets;
 
 			return View(viewModel);
 		}

@@ -15,6 +15,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.ticketDesign)
                 </th>
+			 <th>
+				@Html.DisplayNameFor(model => model.eventName)
+			 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ticketSalesEnabled)
                 </th>
@@ -36,6 +39,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ticketDesign)
             </td>
+	       <td>
+	           @Html.DisplayFor(modelItem => item.eventName)
+	       </td>
           <td>
                 @Html.DisplayFor(modelItem => item.ticketSalesEnabled)
             </td>
