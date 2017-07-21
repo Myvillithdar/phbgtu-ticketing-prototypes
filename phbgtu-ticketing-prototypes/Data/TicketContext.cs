@@ -16,8 +16,14 @@ namespace phbgtu_ticketing_prototypes.Data
 		public DbSet<Ticket> Tickets { get; set; }
 		public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<TicketEvent> TicketEvents { get; set; }
-	   public DbSet<CustomFormFieldQuestion> CustomFormFields { get; set; }
-	   public DbSet<TicketDesign> TicketDesigns { get; set; }
-	   public DbSet<TicketDesignElement> TicketDesignElements { get; set; }
+	    public DbSet<CustomFormFieldQuestion> CustomFormFieldQuestions { get; set; }
+	    public DbSet<TicketDesign> TicketDesigns { get; set; }
+	    public DbSet<TicketDesignElement> TicketDesignElements { get; set; }
+        public DbSet<CustomFormFieldDatatype> CustomFormFieldDatatypes { get; set; }
+        public DbSet<CustomFormFieldDataOption> CustomFormFieldDataOptions{ get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<UserType> UserTypes{ get; set; }
+        public DbSet<TicketStatus> TicketStatuses { get; set; }
+        public DbSet<CustomFormFieldResponse> CustomFormFieldResponses { get; set; }
     }
 }

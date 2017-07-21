@@ -34,3 +34,50 @@
     <a asp-action="Edit" asp-route-id="@Model.TicketDesignID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<h2>Custom Form Fields</h2>
+<p>
+    <a asp-controller="CustomFormFieldQuestions" asp-action="Create" asp-route-id="@Model.TicketDesignID">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Field Label
+            </th>
+            <th>
+                Field Type
+            </th>
+            <th>
+                Field Options
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CustomFormFields)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FormFieldLabel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FormFieldDatatype.DatatypeName)
+                </td>
+                <td>
+                    <ul>
+                        @foreach (var option in item.FormFieldDataOptions)
+                        {
+                            <li>@Html.DisplayFor(modelItem => option.DataOptionValue)</li>
+                        }
+                    </ul>
+
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CustomFormFieldQuestionID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CustomFormFieldQuestionID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CustomFormFieldQuestionID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

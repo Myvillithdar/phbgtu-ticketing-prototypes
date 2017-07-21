@@ -1,0 +1,53 @@
+@model IEnumerable<phbgtu_ticketing_prototypes.Models.CustomFormFieldQuestion>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TicketDesignID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FormFieldLabel)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FormFieldRequired)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormFieldDatatype)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketDesignID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormFieldLabel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormFieldRequired)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormFieldDatatype.CustomFormFieldDatatypeID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CustomFormFieldQuestionID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CustomFormFieldQuestionID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CustomFormFieldQuestionID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

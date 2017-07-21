@@ -9,6 +9,7 @@ namespace phbgtu_ticketing_prototypes.Models
     public class CustomFormFieldQuestion
     {
 		public int CustomFormFieldQuestionID { get; set; }
+        public int TicketDesignID { get; set; }
 		public string FormFieldLabel { get; set; }
 		public int FormFieldDatatypeID { get; set; }
 		public bool FormFieldRequired { get; set; }

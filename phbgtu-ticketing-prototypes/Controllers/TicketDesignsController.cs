@@ -40,6 +40,24 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 return NotFound();
             }
 
+            // Load the custom form field questions into the object
+            try
+            {
+                ticketDesign.CustomFormFields = _context.CustomFormFieldQuestions
+                    .Where(m => m.TicketDesignID == id);
+                for (int i = 0; i < ticketDesign.CustomFormFields.Count(); i++ )
+                {
+                    ticketDesign.CustomFormFields.ElementAt(i).FormFieldDataOptions = _context.CustomFormFieldDataOptions
+                        .Where(m => m.CustomFormFieldQuestionID == ticketDesign.CustomFormFields.ElementAt(i).CustomFormFieldQuestionID);
+                    ticketDesign.CustomFormFields.ElementAt(i).FormFieldDatatype = _context.CustomFormFieldDatatypes
+                        .Where(m => m.CustomFormFieldDatatypeID == ticketDesign.CustomFormFields.ElementAt(i).CustomFormFieldQuestionID).SingleOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
             return View(ticketDesign);
         }
 
