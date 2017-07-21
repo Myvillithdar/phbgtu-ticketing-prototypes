@@ -36,6 +36,49 @@ namespace phbgtu_ticketing_prototypes.Migrations
                     b.ToTable("CustomFormFields");
                 });
 
+            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.Event", b =>
+                {
+                    b.Property<int>("EventID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("beginSales");
+
+                    b.Property<string>("customMessage");
+
+                    b.Property<DateTime>("endSales");
+
+                    b.Property<string>("eventName");
+
+                    b.Property<bool>("ticketSalesEnabled");
+
+                    b.HasKey("EventID");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.EventTicket", b =>
+                {
+                    b.Property<int>("eventTicketID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
+
+                    b.Property<int?>("TicketDesignID");
+
+                    b.Property<int?>("TicketTypeID");
+
+                    b.Property<int>("quantityAvailable");
+
+                    b.HasKey("eventTicketID");
+
+                    b.HasIndex("TicketDesignID");
+
+                    b.HasIndex("TicketTypeID");
+
+                    b.ToTable("EventTickets");
+                });
+
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.Ticket", b =>
                 {
                     b.Property<int>("TicketID")
@@ -43,17 +86,19 @@ namespace phbgtu_ticketing_prototypes.Migrations
 
                     b.Property<string>("EventTicketCode");
 
-                    b.Property<int>("EventTicketNumber");
-
-                    b.Property<int>("TicketEventID");
-
                     b.Property<int?>("TicketTypeID");
+
+                    b.Property<string>("attendeeName");
+
+                    b.Property<DateTime>("dateSold");
+
+                    b.Property<int?>("eventTicketID");
 
                     b.HasKey("TicketID");
 
-                    b.HasIndex("TicketEventID");
-
                     b.HasIndex("TicketTypeID");
+
+                    b.HasIndex("eventTicketID");
 
                     b.ToTable("Tickets");
                 });
@@ -63,13 +108,16 @@ namespace phbgtu_ticketing_prototypes.Migrations
                     b.Property<int>("TicketDesignID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("designDescription");
+                    b.Property<int>("EventID");
 
-                    b.Property<string>("designName");
+                    b.Property<string>("ticketDesignDescription");
 
-                    b.Property<string>("eventTicketCode");
+                    b.Property<string>("ticketDesignName");
 
                     b.HasKey("TicketDesignID");
+
+                    b.HasIndex("EventID")
+                        .IsUnique();
 
                     b.ToTable("TicketDesigns");
                 });
@@ -100,36 +148,10 @@ namespace phbgtu_ticketing_prototypes.Migrations
                     b.ToTable("TicketDesignElements");
                 });
 
-            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.TicketEvent", b =>
-                {
-                    b.Property<int>("TicketEventID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("TicketDesignID");
-
-                    b.Property<DateTime>("beginSales");
-
-                    b.Property<string>("customMessage");
-
-                    b.Property<DateTime>("endSales");
-
-                    b.Property<bool>("ticketSalesEnabled");
-
-                    b.HasKey("TicketEventID");
-
-                    b.HasIndex("TicketDesignID");
-
-                    b.ToTable("TicketEvents");
-                });
-
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.TicketType", b =>
                 {
                     b.Property<int>("TicketTypeID")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("EventID");
-
-                    b.Property<int>("TicketTypeLimit");
 
                     b.Property<string>("TicketTypeName");
 
@@ -145,29 +167,40 @@ namespace phbgtu_ticketing_prototypes.Migrations
                         .HasForeignKey("TicketDesignID");
                 });
 
+            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.EventTicket", b =>
+                {
+                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketDesign", "ticketDesign")
+                        .WithMany("eventTickets")
+                        .HasForeignKey("TicketDesignID");
+
+                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketType", "ticketType")
+                        .WithMany("eventTickets")
+                        .HasForeignKey("TicketTypeID");
+                });
+
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.Ticket", b =>
                 {
-                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketEvent", "ticketEvent")
-                        .WithMany("tickets")
-                        .HasForeignKey("TicketEventID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketType")
-                        .WithMany("Tickets")
+                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketType", "ticketType")
+                        .WithMany()
                         .HasForeignKey("TicketTypeID");
+
+                    b.HasOne("phbgtu_ticketing_prototypes.Models.EventTicket", "eventTicket")
+                        .WithMany("tickets")
+                        .HasForeignKey("eventTicketID");
+                });
+
+            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.TicketDesign", b =>
+                {
+                    b.HasOne("phbgtu_ticketing_prototypes.Models.Event", "Event")
+                        .WithOne("ticketDesign")
+                        .HasForeignKey("phbgtu_ticketing_prototypes.Models.TicketDesign", "EventID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.TicketDesignElement", b =>
                 {
                     b.HasOne("phbgtu_ticketing_prototypes.Models.TicketDesign")
-                        .WithMany("elements")
-                        .HasForeignKey("TicketDesignID");
-                });
-
-            modelBuilder.Entity("phbgtu_ticketing_prototypes.Models.TicketEvent", b =>
-                {
-                    b.HasOne("phbgtu_ticketing_prototypes.Models.TicketDesign", "ticketDesign")
-                        .WithMany()
+                        .WithMany("ticketDesignElements")
                         .HasForeignKey("TicketDesignID");
                 });
         }
