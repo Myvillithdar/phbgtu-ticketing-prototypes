@@ -1,0 +1,114 @@
+@model phbgtu_ticketing_prototypes.Models.TicketDesign
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2><span class="fa fa-list"></span> Details</h2>
+
+<div>
+    <h4>TicketDesign</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DesignName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DesignName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DesignDescription)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DesignDescription)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicketCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicketCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TicketDesignID"><span class="fa fa-edit"></span> Edit</a> |
+    <a asp-action="Index"><span class="fa fa-arrow-left"></span> Back to List</a>
+</div>
+
+<hr />
+<h4>Custom Form Fields</h4>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Field Label
+            </th>
+            <th>
+                Field Type
+            </th>
+            <th>
+                Field Options
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model.CustomFormFields.Count() == 0)
+        {
+            <tr>
+                <td colspan="4">No custom form fields. <a asp-controller="CustomFormFieldQuestions" asp-action="Create" asp-route-id="@Model.TicketDesignID"><span class="fa fa-plus"></span> Click here</a> to add.</td>
+            </tr>
+
+        }
+        else
+        {
+            @foreach (var item in Model.CustomFormFields)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FormFieldLabel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FormFieldDatatype.DatatypeName)
+                    </td>
+                    <td>
+                        @try
+                        {
+                            <ul>
+                                @foreach (var option in item.FormFieldDataOptions)
+                                {
+                                    <li>@Html.DisplayFor(modelItem => option.DataOptionValue)</li>
+                                }
+                            </ul>
+                        }
+                        catch(Exception ex) {
+                            <span>N/A</span>
+                         }
+
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-edit"></span> Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-list"></span> Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-remove"></span> Delete</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="4">
+                    <a asp-controller="CustomFormFieldQuestions" asp-action="Create" asp-route-id="@Model.TicketDesignID"><span class="fa fa-plus"></span> Click here</a> to add more custom fields
+                </td>
+            </tr>
+        }
+        
+    </tbody>
+</table>

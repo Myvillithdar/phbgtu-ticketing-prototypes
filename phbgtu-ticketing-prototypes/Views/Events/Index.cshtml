@@ -1,4 +1,4 @@
-﻿@model IEnumerable<phbgtu_ticketing_prototypes.Models.Event>
+@model IEnumerable<phbgtu_ticketing_prototypes.Models.Event>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,22 +13,19 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.ticketDesign)
-                </th>
-			 <th>
-				@Html.DisplayNameFor(model => model.eventName)
-			 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ticketSalesEnabled)
+                    @Html.DisplayNameFor(model => model.EventName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.customMessage)
+                    @Html.DisplayNameFor(model => model.TicketSalesEnabled)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.beginSales)
+                    @Html.DisplayNameFor(model => model.CustomMessage)
                 </th>
-              <th>
-                    @Html.DisplayNameFor(model => model.endSales)
+                <th>
+                    @Html.DisplayNameFor(model => model.BeginSales)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EndSales)
                 </th>
             <th></th>
         </tr>
@@ -37,22 +34,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ticketDesign)
-            </td>
-	       <td>
-	           @Html.DisplayFor(modelItem => item.eventName)
-	       </td>
-          <td>
-                @Html.DisplayFor(modelItem => item.ticketSalesEnabled)
-            </td>
-          <td>
-                @Html.DisplayFor(modelItem => item.customMessage)
+                @Html.DisplayFor(modelItem => item.EventName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.beginSales)
+                @Html.DisplayFor(modelItem => item.TicketSalesEnabled)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.endSales)
+                @Html.DisplayFor(modelItem => item.CustomMessage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BeginSales)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndSales)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.EventID">Edit</a> |
@@ -63,4 +57,3 @@
 }
     </tbody>
 </table>
-

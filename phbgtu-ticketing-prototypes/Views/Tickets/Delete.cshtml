@@ -1,0 +1,65 @@
+@model phbgtu_ticketing_prototypes.Models.Ticket
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="TicketID" />
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountPaid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AmountPaid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateSold)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateSold)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AttendeeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AttendeeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicket)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicket.EventTicketID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketStatus.TicketStatusID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserAccount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserAccount.UserAccountID)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

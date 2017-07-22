@@ -1,7 +1,7 @@
-﻿@model phbgtu_ticketing_prototypes.Models.Ticket
+@model phbgtu_ticketing_prototypes.Models.Ticket
 
 @{
-	ViewData["Title"] = "Details";
+    ViewData["Title"] = "Details";
 }
 
 <h2>Details</h2>
@@ -11,22 +11,46 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.TicketID)
+            @Html.DisplayNameFor(model => model.AmountPaid)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.TicketID)
+            @Html.DisplayFor(model => model.AmountPaid)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.EventTicketNumber)
+            @Html.DisplayNameFor(model => model.DateSold)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.EventTicketNumber)
+            @Html.DisplayFor(model => model.DateSold)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.EventTicketCode)
+            @Html.DisplayNameFor(model => model.AttendeeName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.EventTicketCode)
+            @Html.DisplayFor(model => model.AttendeeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicket)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicket.EventTicketID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketStatus.TicketStatusID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserAccount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserAccount.UserAccountID)
         </dd>
     </dl>
 </div>

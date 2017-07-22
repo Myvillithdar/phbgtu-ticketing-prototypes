@@ -1,0 +1,47 @@
+@model phbgtu_ticketing_prototypes.Models.TicketDesign
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>TicketDesign</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="TicketDesignID" />
+        <dt>
+            @Html.DisplayNameFor(model => model.DesignName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DesignName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DesignDescription)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DesignDescription)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicketCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicketCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Event)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Event.EventID)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>
