@@ -12,7 +12,7 @@
         <fieldset id="ticket-quantity" class="form-horizontal">
             <legend>{eventName} Ticket Purchase</legend>
             <div class="control-group">
-                <label class="control-label"><strong>Tickets are $5 dollars for the selected event</strong></label>
+                <label class="control-label"><strong>Tickets are &#3647;168 for the selected event</strong></label>
                 <br />
                 <label class="control-label" for="numTickets"><strong>How many tickets would you like to buy?</strong></label>
                 <br />
@@ -58,7 +58,7 @@
                             payment: {
                                 transactions: [
                                     {
-                                        amount: { total: calculatePrice(), currency: 'USD' }
+                                        amount: { total: calculatePrice(), currency: 'THB' }
 
                                     }
                                 ]
@@ -69,7 +69,6 @@
                     onAuthorize: function (data, actions) {
                         // Execute the payment here
                         return actions.payment.execute().then(function () {
-                            window.alert('Payment Complete!');
                         });
                     }
 
@@ -139,8 +138,8 @@ $("select[name=numTickets]").change(function()
 		var attendeeFields = $(".attendee-field");
 		var attendeeFieldCount = attendeeFields.length;
         var attendeeCount = $("option:selected", this).val();
-        document.getElementById("price").innerHTML = "$" + (attendeeCount * 5);
-        PayPalFinalAmount = (attendeeCount * 5);
+        document.getElementById("price").innerHTML = "&#3647;" + (attendeeCount * 168);
+        PayPalFinalAmount = (attendeeCount * 168);
 
 		if (attendeeCount == 0)
 			$("#ticket-data").addClass("hidden");
@@ -167,7 +166,7 @@ $("select[name=numTickets]").change(function()
 
     function calculatePrice() {
         var attendeeCount = $("option:selected", this).val();
-        var CountAfterMath = (attendeeCount * 5);
+        var CountAfterMath = (attendeeCount * 168);
         var FinalCount = (PayPalFinalAmount + ".00").toString();
         return FinalCount;
     }
