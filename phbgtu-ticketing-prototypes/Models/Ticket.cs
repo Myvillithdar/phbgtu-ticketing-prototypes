@@ -11,9 +11,11 @@ namespace phbgtu_ticketing_prototypes.Models
         public int UserAccountID { get; set; }
         public int TicketStatusID { get; set; }
         [DataType(DataType.Currency)]
+	   [Column(TypeName ="Money")]
         public decimal AmountPaid { get; set; }
 		[DataType(DataType.Date)]
-		public DateTime DateSold { get; set; }
+		[Column(TypeName = "Date")]
+		public DateTime? DateSold { get; set; }
 		public string AttendeeName { get; set; }
         public string TicketNumber { get; set; }
 
