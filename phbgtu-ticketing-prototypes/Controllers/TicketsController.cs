@@ -181,5 +181,37 @@ namespace phbgtu_ticketing_prototypes.Controllers
         {
             return _context.Tickets.Any(e => e.TicketID == id);
         }
+
+
+        public async Task<IActionResult> PurchaseConfirmation(int? ID) //pass in an ID to find the specific Ticket
+        {
+
+            //read in from database
+            if (ID == null)
+            {
+                return NotFound();
+            }
+
+            var ticket = await _context.Tickets
+                .SingleOrDefaultAsync(m => m.TicketID == ID);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+
+
+            //display the ticketID passed in
+            ViewData["Message"] = ID;
+
+            return View(ticket);
+
+
+
+        }
+
+
     }
+
+
 }
