@@ -8,12 +8,15 @@ namespace phbgtu_ticketing_prototypes.Models
     public class TicketDesignElement
     {
 		public int TicketDesignElementID { get; set; }
-		public string elementName { get; set; }
-		public string elementType { get; set; }
-		public string elementContent { get; set; }
-		public int xyCoordinates { get; set; }
-		public int zIndex { get; set; }
-		public int dimensions { get; set; }
+        public int TicketDesignID { get; set; }
+		public string ElementName { get; set; }
+		public string ElementType { get; set; }
+		public string ElementContent { get; set; }
+        public int XCoordinate { get; set; }
+        public int YCoordinate { get; set; }
+        public int ZIndex { get; set; }
+        public int XDimension { get; set; }
+		public int YDimension { get; set; }
 
 		/*
 		 * TODO I know xyCoordinates and dimensions are supposed to be arrays,
@@ -21,6 +24,9 @@ namespace phbgtu_ticketing_prototypes.Models
 		 * so they need to be database-compatible types.  We'll need a getter 
 		 * function or something to put the individual numbers together into an
 		 * array.
+         * 
+         * DONE: I changed the names and made them into separate fields,
+         * Then I modified the setters and created appropriate getters. (MT)
 		 */
 
 		public TicketDesignElement()
@@ -42,12 +48,30 @@ namespace phbgtu_ticketing_prototypes.Models
 
         public void SetCoordinates(int x, int y)
         {
-        //    this.xyCoordinates = new int[2] { x, y };
+            this.XCoordinate = x;
+            this.YCoordinate = y;
         }
 
-        public void SetDimensions(int length, int width)
+        public int[] GetCoordinates()
         {
-        //    this.dimensions = new int[2] { length, width };
+            int[] coordinates = new int[2];
+            coordinates[0] = this.XCoordinate;
+            coordinates[1] = this.YCoordinate;
+            return coordinates;
+        }
+
+        public void SetDimensions(int width, int height)
+        {
+            this.XDimension = width;
+            this.YDimension = height;
+        }
+
+        public int[] GetDimensions()
+        {
+            int[] dimensions = new int[2];
+            dimensions[0] = this.XDimension;
+            dimensions[1] = this.YDimension;
+            return dimensions;
         }
     }
 }

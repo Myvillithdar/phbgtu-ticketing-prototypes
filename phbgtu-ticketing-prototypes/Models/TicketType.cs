@@ -8,7 +8,8 @@ namespace phbgtu_ticketing_prototypes.Models
 		public int TicketTypeID { get; set; }
 		public string TicketTypeName { get; set; }
 
-		public ICollection<EventTicket> eventTickets { get; set; }
+        [NotMapped]
+		public ICollection<EventTicket> EventTickets { get; set; }
 
 	}
 }

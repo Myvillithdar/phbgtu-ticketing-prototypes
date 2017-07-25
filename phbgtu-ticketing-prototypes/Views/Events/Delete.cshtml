@@ -1,4 +1,4 @@
-﻿@model phbgtu_ticketing_prototypes.Models.Event
+@model phbgtu_ticketing_prototypes.Models.Event
 
 @{
     ViewData["Title"] = "Delete";
@@ -11,42 +11,36 @@
     <h4>Event</h4>
     <hr />
     <dl class="dl-horizontal">
-        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="EventID" />
         <dt>
-            @Html.DisplayNameFor(model => model.ticketDesign)
+            @Html.DisplayNameFor(model => model.EventName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ticketDesign)
+            @Html.DisplayFor(model => model.EventName)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.eventName)
+            @Html.DisplayNameFor(model => model.TicketSalesEnabled)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.eventName)
+            @Html.DisplayFor(model => model.TicketSalesEnabled)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ticketSalesEnabled)
+            @Html.DisplayNameFor(model => model.CustomMessage)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ticketSalesEnabled)
+            @Html.DisplayFor(model => model.CustomMessage)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.customMessage)
+            @Html.DisplayNameFor(model => model.BeginSales)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.customMessage)
+            @Html.DisplayFor(model => model.BeginSales)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.beginSales)
+            @Html.DisplayNameFor(model => model.EndSales)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.beginSales)
-        </dd>
-		<dt>
-            @Html.DisplayNameFor(model => model.endSales)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.endSales)
+            @Html.DisplayFor(model => model.EndSales)
         </dd>
     </dl>
     

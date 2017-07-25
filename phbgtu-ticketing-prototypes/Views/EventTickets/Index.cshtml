@@ -1,0 +1,53 @@
+@model IEnumerable<phbgtu_ticketing_prototypes.Models.EventTicket>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.QuantityAvailable)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TicketPrice)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketDesign)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuantityAvailable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketDesign.TicketDesignID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketType.TicketTypeID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EventTicketID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EventTicketID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EventTicketID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

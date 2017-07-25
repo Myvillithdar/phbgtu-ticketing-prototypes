@@ -1,13 +1,79 @@
-﻿@model phbgtu_ticketing_prototypes.Models.Ticket
+@model phbgtu_ticketing_prototypes.Models.Ticket
 
 @{
-	ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create";
 }
 
 <h2>Create</h2>
 
-<p>What am I doing with my life</p>
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Ticket</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="EventTicketID" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="EventTicketID" class ="form-control" asp-items="ViewBag.EventTicketID"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="UserAccountID" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="UserAccountID" class ="form-control" asp-items="ViewBag.UserAccountID"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TicketStatusID" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="TicketStatusID" class ="form-control" asp-items="ViewBag.TicketStatusID"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AmountPaid" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="AmountPaid" class="form-control" />
+                <span asp-validation-for="AmountPaid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DateSold" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DateSold" class="form-control" />
+                <span asp-validation-for="DateSold" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AttendeeName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="AttendeeName" class="form-control" />
+                <span asp-validation-for="AttendeeName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TicketNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TicketNumber" class="form-control" />
+                <span asp-validation-for="TicketNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+@if (Model != null)
+{
+    <script type="text/javascript">
+        var eventTicketID = $("select[asp-for=EventTicketID]");
+        eventTicketID.children("[value=@Model.EventTicketID]").prop("selected", true);
+        eventTicketID.prop("readonly", true);
+    </script>
+}

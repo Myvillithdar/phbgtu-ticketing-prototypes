@@ -1,0 +1,47 @@
+@model phbgtu_ticketing_prototypes.Models.CustomFormFieldQuestion
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>CustomFormFieldQuestion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="CustomFormFieldQuestionID" />
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketDesignID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketDesignID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FormFieldLabel)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FormFieldLabel)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FormFieldRequired)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FormFieldRequired)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FormFieldDatatype)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FormFieldDatatype.CustomFormFieldDatatypeID)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

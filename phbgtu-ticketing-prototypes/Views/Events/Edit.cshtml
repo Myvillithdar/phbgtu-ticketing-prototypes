@@ -1,4 +1,4 @@
-﻿@model phbgtu_ticketing_prototypes.Models.Event
+@model phbgtu_ticketing_prototypes.Models.Event
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,36 +8,44 @@
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>Movie</h4>
+        <h4>Event</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="EventID" />
         <div class="form-group">
-            <label asp-for="ticketSalesEnabled" class="col-md-2 control-label"></label>
+            <label asp-for="EventName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="ticketSalesEnabled" class="form-control" />
-                <span asp-validation-for="ticketSalesEnabled" class="text-danger"></span>
+                <input asp-for="EventName" class="form-control" />
+                <span asp-validation-for="EventName" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="customMessage" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="customMessage" class="form-control" />
-                <span asp-validation-for="customMessage" class="text-danger"></span>
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="TicketSalesEnabled" />
+                    <label asp-for="TicketSalesEnabled"></label>
+                </div>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="beginSales" class="col-md-2 control-label"></label>
+            <label asp-for="CustomMessage" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="beginSales" class="form-control" />
-                <span asp-validation-for="beginSales" class="text-danger"></span>
+                <input asp-for="CustomMessage" class="form-control" />
+                <span asp-validation-for="CustomMessage" class="text-danger"></span>
             </div>
         </div>
-		<div class="form-group">
-            <label asp-for="endSales" class="col-md-2 control-label"></label>
+        <div class="form-group">
+            <label asp-for="BeginSales" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="endSales" class="form-control" />
-                <span asp-validation-for="endSales" class="text-danger"></span>
+                <input asp-for="BeginSales" class="form-control" />
+                <span asp-validation-for="BeginSales" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="EndSales" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="EndSales" class="form-control" />
+                <span asp-validation-for="EndSales" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
@@ -51,3 +59,4 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
