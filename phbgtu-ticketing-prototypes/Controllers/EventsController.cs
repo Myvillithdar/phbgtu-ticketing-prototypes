@@ -66,21 +66,27 @@ namespace phbgtu_ticketing_prototypes.Controllers
             return View();
         }
 
-        // POST: Events/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventID,EventName,TicketSalesEnabled,CustomMessage,BeginSales,EndSales")] Event @event)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(@event);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(@event);
-        }
+		// POST: Events/Create
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create([Bind("EventID,EventName,TicketSalesEnabled,CustomMessage,BeginSales,EndSales")] Event @event)
+		{
+			if (ModelState.IsValid)
+			{
+				TicketDesign td = new TicketDesign();
+				td.DesignName = @event.EventName;
+				td.DesignDescription = @event.CustomMessage;
+				_context.Add(@event);
+				_context.SaveChanges();
+				td.EventID = @event.EventID;
+				_context.Add(td);
+				await _context.SaveChangesAsync();
+				return RedirectToAction("Index");
+			}
+			return View(@event);
+		}
 
         // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)
