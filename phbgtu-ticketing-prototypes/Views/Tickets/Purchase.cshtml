@@ -3,9 +3,9 @@
     ViewData["Title"] = "Purchase";
 }
 
-        <h2>Purchase</h2>
+<h2>Purchase</h2>
 
-            <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
 <div class="form-wrapper">
     <form method="post" action="" enctype="multipart/form-data">
@@ -13,10 +13,10 @@
             <legend>{eventName} Ticket Purchase</legend>
             <div class="control-group">
                 <label class="control-label"><strong>Tickets are $5 dollars for the selected event</strong></label>
-                <br />                
+                <br />
                 <label class="control-label" for="numTickets"><strong>How many tickets would you like to buy?</strong></label>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <div class="controls">
                     <select name="numTickets"></select>
                 </div>
@@ -30,15 +30,15 @@
                     <div class="controls">
                         <input name="attendeeName[1]" type="text" class="input input-large">
                     </div>
-                    
+
                 </div>
             </div>
             <br />
             <label class="control-label"><strong>This is your price:</strong></label>
             <p id="price"></p>
             <br />
-            <br/>
-            <div id="paypal-button"></div> 
+            <br />
+            <div id="paypal-button"></div>
 
             <script>
                 paypal.Button.render({
@@ -101,10 +101,9 @@
         display: none;
     }
 </style>
-<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-    $(function () { 
-        $("#ticket-data").addClass("hidden");   //This is the code that was added for temp fix 
+    $(function () {
+        $("#ticket-data").addClass("hidden");   //This is the code that was added for temp fix
     });
 $(function()
 {
@@ -116,7 +115,7 @@ $(function()
             $("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
         }
         $("select[name=numTickets]").change();
-               
+
 	}
     );
 
@@ -133,16 +132,16 @@ function getAttendeeField(index)
 
 	return attendeeFieldContent.join("").replace(/\{#\}/g, index);
     }
-    var PayPalFinalAmount = 0;  //used to globally get the amount of attendees 
+    var PayPalFinalAmount = 0;  //used to globally get the amount of attendees
 $("select[name=numTickets]").change(function()
 {
-    
+
 		var attendeeFields = $(".attendee-field");
 		var attendeeFieldCount = attendeeFields.length;
         var attendeeCount = $("option:selected", this).val();
         document.getElementById("price").innerHTML = "$" + (attendeeCount * 5);
         PayPalFinalAmount = (attendeeCount * 5);
-       
+
 		if (attendeeCount == 0)
 			$("#ticket-data").addClass("hidden");
 		else
@@ -161,7 +160,7 @@ $("select[name=numTickets]").change(function()
 			{
 				$("#attendeeField" + (i+1)).remove();
 			}
-        }        
+        }
 }
 
     );
@@ -171,6 +170,6 @@ $("select[name=numTickets]").change(function()
         var CountAfterMath = (attendeeCount * 5);
         var FinalCount = (PayPalFinalAmount + ".00").toString();
         return FinalCount;
-    }   
+    }
 
 </script>

@@ -1,15 +1,30 @@
-﻿
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace phbgtu_ticketing_prototypes.Models
 {
     public class Ticket
     {
 		public int TicketID { get; set; }
-	//	public int TicketTypeID { get; set; }
-		public int EventTicketNumber { get; set; }
-		public string EventTicketCode { get; set; }
+		public int EventTicketID { get; set; }
+        public int UserAccountID { get; set; }
+        public int TicketStatusID { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal AmountPaid { get; set; }
+		[DataType(DataType.Date)]
+		public DateTime DateSold { get; set; }
+		public string AttendeeName { get; set; }
+        public string TicketNumber { get; set; }
 
-		public int TicketEventID { get; set; }
-		public TicketEvent ticketEvent { get; set; }
+        [ForeignKey("EventTicketID")]
+		public EventTicket EventTicket { get; set; }
+
+        [ForeignKey("UserAccountID")]
+		public UserAccount UserAccount { get; set; }
+
+        [ForeignKey("TicketStatusID")]
+		public TicketStatus TicketStatus { get; set; }
 
         public Ticket()
         {

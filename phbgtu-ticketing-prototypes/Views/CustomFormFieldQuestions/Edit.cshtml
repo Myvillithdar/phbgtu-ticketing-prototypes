@@ -1,0 +1,55 @@
+@model phbgtu_ticketing_prototypes.Models.CustomFormFieldQuestion
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>CustomFormFieldQuestion</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="CustomFormFieldQuestionID" />
+        <div class="form-group">
+            <label asp-for="TicketDesignID" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TicketDesignID" class="form-control" />
+                <span asp-validation-for="TicketDesignID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FormFieldLabel" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FormFieldLabel" class="form-control" />
+                <span asp-validation-for="FormFieldLabel" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FormFieldDatatypeID" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="FormFieldDatatypeID" class="form-control" asp-items="ViewBag.FormFieldDatatypeID"></select>
+                <span asp-validation-for="FormFieldDatatypeID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="FormFieldRequired" />
+                    <label asp-for="FormFieldRequired"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

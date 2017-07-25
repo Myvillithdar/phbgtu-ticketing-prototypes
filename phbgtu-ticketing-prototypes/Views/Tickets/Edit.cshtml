@@ -1,0 +1,75 @@
+@model phbgtu_ticketing_prototypes.Models.Ticket
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>Ticket</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="TicketID" />
+        <div class="form-group">
+            <label asp-for="EventTicketID" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="EventTicketID" class="form-control" asp-items="ViewBag.EventTicketID"></select>
+                <span asp-validation-for="EventTicketID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="UserAccountID" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="UserAccountID" class="form-control" asp-items="ViewBag.UserAccountID"></select>
+                <span asp-validation-for="UserAccountID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TicketStatusID" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="TicketStatusID" class="form-control" asp-items="ViewBag.TicketStatusID"></select>
+                <span asp-validation-for="TicketStatusID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AmountPaid" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="AmountPaid" class="form-control" />
+                <span asp-validation-for="AmountPaid" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DateSold" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DateSold" class="form-control" />
+                <span asp-validation-for="DateSold" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AttendeeName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="AttendeeName" class="form-control" />
+                <span asp-validation-for="AttendeeName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TicketNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TicketNumber" class="form-control" />
+                <span asp-validation-for="TicketNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
