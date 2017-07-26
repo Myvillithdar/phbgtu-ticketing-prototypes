@@ -75,7 +75,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TicketDesignID,EventID,DesignName,DesignDescription,EventTicketCode")] TicketDesign ticketDesign)
+        public async Task<IActionResult> Create([Bind("TicketDesignID,EventID,DesignName,DesignDescription")] TicketDesign ticketDesign)
         {
             if (ModelState.IsValid)
             {
@@ -109,7 +109,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TicketDesignID,EventID,DesignName,DesignDescription,EventTicketCode")] TicketDesign ticketDesign)
+        public async Task<IActionResult> Edit(int id, [Bind("TicketDesignID,EventID,DesignName,DesignDescription")] TicketDesign ticketDesign)
         {
             if (id != ticketDesign.TicketDesignID)
             {

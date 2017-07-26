@@ -10,8 +10,8 @@
 <div>
     <h4>TicketDesign</h4>
     <hr />
+    <input type="hidden" asp-for="TicketDesignID" />
     <dl class="dl-horizontal">
-        <input type="hidden" asp-for="TicketDesignID" />
         <dt>
             @Html.DisplayNameFor(model => model.DesignName)
         </dt>
@@ -23,12 +23,6 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.DesignDescription)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.EventTicketCode)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EventTicketCode)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Event)

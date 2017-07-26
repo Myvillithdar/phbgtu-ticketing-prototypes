@@ -161,7 +161,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 }
                 else
                 {
-                    if (userAccount.UserTypeID == null)
+                    if (userAccount.UserTypeID == 0)
                     {
                         // Automatically create the "customer" user type if it doesn't exist.
                         // Then assign that user type to the person purchasing the tickets.
