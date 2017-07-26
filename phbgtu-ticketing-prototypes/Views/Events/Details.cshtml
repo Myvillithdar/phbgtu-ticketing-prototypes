@@ -80,6 +80,9 @@ else
                 <th>
                     Total Quantity Available
                 </th>
+			 <th>
+				Price per Ticket
+		      </th>
                 <th>
                     Actions
                 </th>
@@ -89,7 +92,7 @@ else
             @if (Model.eventTickets.Count() == 0)
             {
                 <tr>
-                    <td colspan="3">No ticket types or available quantities are set for this event. <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID">Click here</a> to add ticket types and quantities to this event.</td>
+                    <td colspan="4">No ticket types or available quantities are set for this event. <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID">Click here</a> to add ticket types and quantities to this event.</td>
                 </tr>
 
             }
@@ -104,6 +107,9 @@ else
                         <td>
                             @Html.DisplayFor(modelItem => item.QuantityAvailable)
                         </td>
+				    <td>
+				    @Html.DisplayFor(modelItem => item.TicketPrice)
+				</td>
                         <td>
                             <a asp-controller="EventTickets" asp-action="Edit" asp-route-id="@item.EventTicketID"><span class="fa fa-edit"></span> Edit</a> |
                             <a asp-controller="EventTickets" asp-action="Details" asp-route-id="@item.EventTicketID"><span class="fa fa-list"></span> Details</a> |
@@ -112,7 +118,7 @@ else
                     </tr>
                 }
                 <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                         <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID"><span class="fa fa-plus"></span> Click here</a> to add ticket types and available quantities to this event.
                     </td>
                 </tr>
