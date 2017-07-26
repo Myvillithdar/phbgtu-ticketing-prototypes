@@ -7,7 +7,7 @@
 <h2>Index</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"><span class="fa fa-plus"></span> Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -17,9 +17,6 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.DesignDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EventTicketCode)
                 </th>
             <th>
                 @Html.DisplayNameFor(model => model.Event)
@@ -37,15 +34,12 @@
                 @Html.DisplayFor(modelItem => item.DesignDescription)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EventTicketCode)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Event.EventID)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.TicketDesignID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TicketDesignID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TicketDesignID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.TicketDesignID"><span class="fa fa-edit"></span> Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TicketDesignID"><span class="fa fa-list"></span> Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TicketDesignID"><span class="fa fa-remove"></span> Delete</a>
             </td>
         </tr>
 }

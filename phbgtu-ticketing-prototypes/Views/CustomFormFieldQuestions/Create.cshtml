@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2><span class="fa fa-plus"></span> Create</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
@@ -14,7 +14,7 @@
         <div class="form-group">
             <label asp-for="TicketDesignID" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="TicketDesignID" class="form-control" />
+                <select asp-for="TicketDesignID" class="form-control" asp-items="ViewBag.TicketDesignID"></select>
                 <span asp-validation-for="TicketDesignID" class="text-danger"></span>
             </div>
         </div>
