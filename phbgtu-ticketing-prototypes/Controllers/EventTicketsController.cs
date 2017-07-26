@@ -65,11 +65,12 @@ namespace phbgtu_ticketing_prototypes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EventTicketID,QuantityAvailable,TicketTypeID,TicketDesignID,TicketPrice")] EventTicket eventTicket)
         {
+		  TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
             if (ModelState.IsValid)
             {
                 _context.Add(eventTicket);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Events", new { id = td.EventID });
             }
             ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID", eventTicket.TicketDesignID);
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
