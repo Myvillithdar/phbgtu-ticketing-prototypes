@@ -8,9 +8,10 @@ using phbgtu_ticketing_prototypes.Data;
 namespace phbgtu_ticketing_prototypes.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    partial class TicketContextModelSnapshot : ModelSnapshot
+    [Migration("20170725142217_FixDataTypes")]
+    partial class FixDataTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

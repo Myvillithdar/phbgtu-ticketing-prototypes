@@ -12,7 +12,6 @@ namespace phbgtu_ticketing_prototypes.Models
 		public int EventID { get; set; }
 		public string DesignName { get; set; }
 		public string DesignDescription { get; set; }
-		public String EventTicketCode { get; set; }
 
         [ForeignKey("EventID")]
 		public Event Event { get; set; }
