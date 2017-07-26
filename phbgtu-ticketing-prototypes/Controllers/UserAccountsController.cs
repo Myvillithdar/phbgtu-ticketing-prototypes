@@ -161,9 +161,23 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 }
                 else
                 {
+                    if (userAccount.UserTypeID == null)
+                    {
+                        // Automatically create the "customer" user type if it doesn't exist.
+                        // Then assign that user type to the person purchasing the tickets.
+                        UserType userType = _context.UserTypes.SingleOrDefault(m => m.UserTypeName == "Customer");
+                        if (userType == null)
+                        {
+                            userType = new UserType();
+                            userType.UserTypeName = "Customer";
+                            _context.Add(userType);
+                            _context.SaveChanges();
+                        }                       
+                        userAccount.UserTypeID = (userType == null? 1 : userType.UserTypeID);
+                    }                       
                     _context.Add(userAccount);
                     _context.SaveChanges();
-                    return "{UserAccountID: " + userAccount.UserAccountID.ToString() + "}";
+                    return "{\"UserAccountID\": " + userAccount.UserAccountID.ToString() + "}";
                 }
             }
 
