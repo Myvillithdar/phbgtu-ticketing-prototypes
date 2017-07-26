@@ -8,7 +8,26 @@
 <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
 <div class="form-wrapper">
-    <form method="post" action="" enctype="multipart/form-data">
+    <form id="user-form" method="post" action="" onsubmit="return false;" enctype="multipart/form-data">
+        <fieldset id="" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="EmailAddress"><strong>Email Address</strong></label>
+                <div class="controls">
+                    <input name="EmailAddress" type="text" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="UserName"><strong>Name</strong></label>
+                <div class="controls">
+                    <input name="UserName" type="text" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<div class="form-wrapper">
+    <form method="post" asp-action="SaveTicket" enctype="multipart/form-data">
         <fieldset id="ticket-quantity" class="form-horizontal">
             <legend>{eventName} Ticket Purchase</legend>
             <div class="control-group">
@@ -22,13 +41,14 @@
                 </div>
             </div>
         </fieldset>
+        <input type="hidden" name="UserAccountID" id="UserAccountID" />
         <fieldset id="ticket-data" class="form-horizontal hidden">
             <legend>Attendee Details</legend>
             <div id="attendee-data">
                 <div class="control-group attendee-field" id="attendeeField1">
-                    <label class="control-label" for="attendeeName[1]"><strong>Attendee #1's name</strong></label>
+                    <label class="control-label" for="AttendeeName[1]"><strong>Attendee #1's name</strong></label>
                     <div class="controls">
-                        <input name="attendeeName[1]" type="text" class="input input-large">
+                        <input name="AttendeeName[1]" type="text" class="input input-large">
                     </div>
 
                 </div>
@@ -39,7 +59,15 @@
             <br />
             <br />
             <div id="paypal-button"></div>
-
+            <div id="confirm" style="display: none;">
+                <div>Ship to:</div>
+                <div><span id="recipient"></span>, <span id="line1"></span>, <span id="city"></span></div>
+                <div><span id="state"></span>, <span id="zip"></span>, <span id="country"></span></div>
+                <button id="confirmButton" onclick="getUserAccount(this, event); return false;">Complete Payment</button>
+            </div>
+            <div id="thanks" style="display: none;">
+                Thanks, <span id="thanksname"></span>!
+            </div>
             <script>
                 paypal.Button.render({
 
@@ -68,7 +96,40 @@
 
                     onAuthorize: function (data, actions) {
                         // Execute the payment here
-                        return actions.payment.execute().then(function () {
+                        return actions.payment.execute().then(function (data) {
+                            var shipping = data.payer.payer_info.shipping_address;
+
+                            document.querySelector('#recipient').innerText = shipping.recipient_name;
+                            document.querySelector('#line1').innerText = shipping.line1;
+                            document.querySelector('#city').innerText = shipping.city;
+                            document.querySelector('#state').innerText = shipping.state;
+                            document.querySelector('#zip').innerText = shipping.postal_code;
+                            document.querySelector('#country').innerText = shipping.country_code;
+
+                            document.querySelector('#paypal-button').style.display = 'none';
+                            document.querySelector('#confirm').style.display = 'block';
+
+                            // Listen for click on confirm button
+
+                            document.querySelector('#confirmButton').addEventListener('click', function () {
+
+                                // Disable the button and show a loading message
+
+                                document.querySelector('#confirm').innerText = 'Loading...';
+                                document.querySelector('#confirm').disabled = true;
+
+                                // Execute the payment
+
+                                return actions.payment.execute().then(function () {
+
+                                    // Show a thank-you note
+
+                                    document.querySelector('#thanksname').innerText = shipping.recipient_name;
+
+                                    document.querySelector('#confirm').style.display = 'none';
+                                    document.querySelector('#thanks').style.display = 'block';
+                                });
+                            });
                         });
                     }
 
@@ -101,74 +162,100 @@
     }
 </style>
 <script type="text/javascript">
-    $(function () {
-        $("#ticket-data").addClass("hidden");   //This is the code that was added for temp fix
-    });
-$(function()
-{
-		var maxTicketsPerCustomer = 100;
-        var option = "<option value=\"{#}\">{#}</option>";
-        $("select[name=numTickets]").append(option.replace(/\{#\}/g, ' '));
-		for (var i = 1; i <= maxTicketsPerCustomer; i++)
-        {
-            $("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
-        }
-        $("select[name=numTickets]").change();
+                $(function () {
+                    $("#ticket-data").addClass("hidden");   //This is the code that was added for temp fix
+                });
+                $(function () {
+                    var maxTicketsPerCustomer = 100;
+                    var option = "<option value=\"{#}\">{#}</option>";
+                    $("select[name=numTickets]").append(option.replace(/\{#\}/g, ' '));
+                    for (var i = 1; i <= maxTicketsPerCustomer; i++) {
+                        $("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
+                    }
+                    $("select[name=numTickets]").change();
 
-	}
-    );
+                }
+                );
 
-function getAttendeeField(index)
-{
-	var attendeeFieldContent = [
-		'<div class="control-group attendee-field" id="attendeeField{#}">',
-			'<label class="control-label" for="attendeeName[{#}]"><strong>Attendee #{#}\'s name</strong></label>',
-			'<div class="controls">',
-				'<input name="attendeeName[{#}]" type="text" class="input input-large">',
-			'</div>',
-		'</div>'
-	];
+                function getAttendeeField(index) {
+                    var attendeeFieldContent = [
+                        '<div class="control-group attendee-field" id="attendeeField{#}">',
+                        '<label class="control-label" for="AttendeeName[{#}]"><strong>Attendee #{#}\'s name</strong></label>',
+                        '<div class="controls">',
+                        '<input name="AttendeeName[{#}]" type="text" class="input input-large">',
+                        '</div>',
+                        '</div>'
+                    ];
 
-	return attendeeFieldContent.join("").replace(/\{#\}/g, index);
-    }
-    var PayPalFinalAmount = 0;  //used to globally get the amount of attendees
-$("select[name=numTickets]").change(function()
-{
+                    return attendeeFieldContent.join("").replace(/\{#\}/g, index);
+                }
+                var PayPalFinalAmount = 0;  //used to globally get the amount of attendees
+                $("select[name=numTickets]").change(function () {
 
-		var attendeeFields = $(".attendee-field");
-		var attendeeFieldCount = attendeeFields.length;
-        var attendeeCount = $("option:selected", this).val();
-        document.getElementById("price").innerHTML = "&#3647;" + (attendeeCount * 168);
-        PayPalFinalAmount = (attendeeCount * 168);
+                    var attendeeFields = $(".attendee-field");
+                    var attendeeFieldCount = attendeeFields.length;
+                    var attendeeCount = $("option:selected", this).val();
+                    document.getElementById("price").innerHTML = "&#3647;" + (attendeeCount * 168);
+                    PayPalFinalAmount = (attendeeCount * 168);
 
-		if (attendeeCount == 0)
-			$("#ticket-data").addClass("hidden");
-		else
-			$("#ticket-data").removeClass("hidden");
+                    if (attendeeCount == 0)
+                        $("#ticket-data").addClass("hidden");
+                    else
+                        $("#ticket-data").removeClass("hidden");
 
-		if (attendeeFieldCount < attendeeCount)
-		{
-			for (var i = attendeeFieldCount; i < attendeeCount; i++)
-			{
-				$("#attendee-data").append(getAttendeeField(i+1));
-			}
-		}
-		else if (attendeeFieldCount > attendeeCount)
-		{
-			for (var i = attendeeFieldCount; i >= attendeeCount; i--)
-			{
-				$("#attendeeField" + (i+1)).remove();
-			}
-        }
-}
+                    if (attendeeFieldCount < attendeeCount) {
+                        for (var i = attendeeFieldCount; i < attendeeCount; i++) {
+                            $("#attendee-data").append(getAttendeeField(i + 1));
+                        }
+                    }
+                    else if (attendeeFieldCount > attendeeCount) {
+                        for (var i = attendeeFieldCount; i >= attendeeCount; i--) {
+                            $("#attendeeField" + (i + 1)).remove();
+                        }
+                    }
+                }
 
-    );
+                );
 
-    function calculatePrice() {
-        var attendeeCount = $("option:selected", this).val();
-        var CountAfterMath = (attendeeCount * 168);
-        var FinalCount = (PayPalFinalAmount + ".00").toString();
-        return FinalCount;
-    }
+                function calculatePrice() {
+                    var attendeeCount = $("option:selected", this).val();
+                    var CountAfterMath = (attendeeCount * 168);
+                    var FinalCount = (PayPalFinalAmount + ".00").toString();
+                    return FinalCount;
+                }
 
+                function getUserAccount(el, ev) {
+                    // Prevent the default action from happening (such as if the browser thinks it should submit the form).
+                    ev.preventDefault();
+                    // Compile the form data in the first form into a POST string
+                    var postData = $("#user-form").serialize();
+
+                    // Submit the first form's data using AJAX to the UserAccount Controller's customized action to create a user account
+                    $.ajax({
+                        url: "/UserAccounts/CheckUserAccount", // Controller/Function: this function checks the user account and creates one if it doesn't exist. It returns a JSON object with the ID.
+                        data: postData, // The user info form data
+                        type: "POST", // The type of request to send: POST
+                        dataType: "text", // They type of response to expect: JSON
+                        success: function (data) {
+                            //alert("Success!"); // For Debugging (remove once it works)
+                            data = JSON.parse(data);
+                            // alert(data.UserAccountID);
+
+                            // Assign the response value to the hidden UserAccountID field in the second form
+                            // (relies on the response being a JSON object with a UserAcountID attribute)
+                            $("#UserAccountID").val(data.UserAccountID);
+
+                            // Submit the second form (to add tickets to the DB)
+                            // The controller function/action (asp-action) that this submits to is in the form element.
+                            // That function will need to be developed in the controller.
+                            // The function/action should then call the confirmation action (Stephen in working on that)
+                            //$("#ticket-form").submit();
+                            url = "/Tickets/PurchaseConfirmation/" + data.UserAccountID;
+                            window.location.href = url;
+                        },
+                        failure: function () {
+                            alert("Failed"); // For debugging (hopefully we won't need to see this)
+                        }
+                    });
+                }
 </script>
