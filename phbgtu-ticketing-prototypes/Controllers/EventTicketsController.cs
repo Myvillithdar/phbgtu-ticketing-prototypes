@@ -54,7 +54,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 			 return NotFound();
 		  }
 		  ViewData["TicketDesignID"] = ticketDesign.TicketDesignID;
-		  ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID");
+		  ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeName");
             return View();
         }
 
