@@ -43,6 +43,14 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 .Where(m => m.TicketDesignID == viewModel.ticketDesign.TicketDesignID);
             if (viewModel.eventTickets != null)
             {
+                // Get the TicketTypes attached to the EventTickets.
+                for (int i = 0; i < viewModel.eventTickets.Count(); i++)
+                {
+                    viewModel.eventTickets.ElementAt(i).TicketType = await _context.TicketTypes
+                        .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.eventTickets.ElementAt(i).TicketTypeID);
+                }
+
+                // Load the Tickets too.
                 viewModel.tickets = new List<Ticket>();
                 foreach (var eventTicket in viewModel.eventTickets)
                 {
