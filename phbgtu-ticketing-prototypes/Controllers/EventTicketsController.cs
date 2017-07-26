@@ -47,11 +47,16 @@ namespace phbgtu_ticketing_prototypes.Controllers
         }
 
         // GET: EventTickets/Create
-        public IActionResult Create(int? id)
+        public async Task<IActionResult> Create(int? id)
         {
+            TicketDesign ticketDesign = null;
+            if (id != null)
+            {
+                ticketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
+            }
 
-            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID");
-            ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID");
+            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "DesignName", ticketDesign);
+            ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeName");
             return View();
         }
 
