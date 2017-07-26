@@ -40,6 +40,10 @@ namespace phbgtu_ticketing_prototypes.Controllers
             TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
             viewModel.eventTickets = await _context.EventTickets.Where(m => m.TicketDesignID == td.TicketDesignID).ToListAsync();
 
+		  foreach (var et in viewModel.eventTickets) {
+				et.TicketType = await _context.TicketTypes.SingleOrDefaultAsync(m => m.TicketTypeID == et.TicketTypeID);
+		  }
+
             // var @event = await _context.Events
             //   .SingleOrDefaultAsync(m => m.EventID == id);
             if (viewModel == null)
