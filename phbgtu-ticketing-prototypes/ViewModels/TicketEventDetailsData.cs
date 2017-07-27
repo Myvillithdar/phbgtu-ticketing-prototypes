@@ -10,5 +10,6 @@ namespace phbgtu_ticketing_prototypes.ViewModels
 	{
 		public Event ticketEvent { get; set; }
         public IEnumerable<EventTicket> eventTickets { get; set; }
+	   public IEnumerable<Ticket> tickets { get; set; }
     }
 }

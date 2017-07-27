@@ -48,22 +48,7 @@
 </div>
 
 <br />
-<h3>Tickets for this Event</h3>
 <hr />
-
-@if (Model.ticketEvent.TicketDesign == null)
-{
-    <p>
-        Event ticket details are not yet configured for this event. <a asp-controller="TicketDesigns" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID">Click here</a> to add event ticketing to this event.
-    </p>
-}
-
-else
-{
-   <p>
-       <a asp-controller="TicketDesigns" asp-action="Details" asp-route-id="@Model.ticketEvent.TicketDesign.TicketDesignID"><span class="fa fa-search"></span> Click here</a> to view the ticket design for this event.
-   </p>
-}
 
 <br />
 
@@ -126,4 +111,73 @@ else
 
         </tbody>
     </table>
+}
+
+<br />
+
+<h3>Tickets for this Event</h3>
+
+@if (Model.tickets != null) {
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Amount Paid
+            </th>
+            <th>
+                Date Sold
+            </th>
+            <th>
+                Attendee Name
+            </th>
+            <th>
+                Ticket Number
+            </th>
+            <th>
+                Event Ticket
+            </th>
+            <th>
+                Ticket Status
+            </th>
+            <th>
+                User Account
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.tickets) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountPaid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateSold)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AttendeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventTicket.EventTicketID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAccount.UserAccountID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TicketID"><span class="fa fa-list"></span> Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
+            </td>
+        </tr>
+	   }
+    </tbody>
+</table>
+
 }
