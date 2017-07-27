@@ -10,6 +10,7 @@
     <div class="form-horizontal">
         <h4>EventTicket</h4>
         <hr />
+	   <input type="hidden" asp-for="TicketDesignID" value="@ViewBag.TicketDesignID"/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="QuantityAvailable" class="col-md-2 control-label"></label>
@@ -22,12 +23,6 @@
             <label asp-for="TicketTypeID" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <select asp-for="TicketTypeID" class ="form-control" asp-items="ViewBag.TicketTypeID"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="TicketDesignID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="TicketDesignID" class ="form-control" asp-items="ViewBag.TicketDesignID"></select>
             </div>
         </div>
         <div class="form-group">
