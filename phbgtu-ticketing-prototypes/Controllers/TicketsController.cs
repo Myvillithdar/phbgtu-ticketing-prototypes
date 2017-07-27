@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
+using phbgtu_ticketing_prototypes.ViewModels;
 //add ViewModel signature
 using phbgtu_ticketing_prototypes.Models.ViewModels;
 
@@ -50,18 +51,28 @@ namespace phbgtu_ticketing_prototypes.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create(int? EventTicketID)
+        public async Task<IActionResult> Create(int? EventTicketID)
         {
             Ticket ticket = null;
+            EventTicket eventTicket = null;
             if (EventTicketID != null)
             {
                 ticket = new Ticket();
                 ticket.EventTicketID = (int)EventTicketID;
+                eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == EventTicketID);
             }
 
-            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "EventTicketID");
-            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID");
-            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID");
+            // load the ticket type names into the event tickets.
+            var eventTickets = await _context.EventTickets.ToListAsync();
+            for (int i = 0; i < eventTickets.Count(); i++)
+            {
+                eventTickets.ElementAt(i).TicketType = await _context.TicketTypes
+                        .SingleOrDefaultAsync(m => m.TicketTypeID == eventTickets.ElementAt(i).TicketTypeID);
+            }
+
+            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "TicketType.TicketTypeName", eventTicket);
+            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusName");
+            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserName");
             return View(ticket);
         }
 
@@ -173,10 +184,48 @@ namespace phbgtu_ticketing_prototypes.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Purchase(int id)
+        // POST: Save Ticket
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveTicket([Bind("TicketID,EventTicketID,UserAccountID,TicketStatusID,AmountPaid,DateSold,AttendeeName,TicketNumber")] Ticket ticket)
         {
+            if (ModelState.IsValid)
+            {
+                _context.Add(ticket);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("PurchaseConfirmation");
+            }
 
-            return View();
+            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "EventTicketID", ticket.EventTicketID);
+            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID", ticket.TicketStatusID);
+            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID", ticket.UserAccountID);
+            return View(ticket);
+        }
+
+        // GET: Tickets/Purchase/5
+        // the ID is the EventID
+        public async Task<IActionResult> Purchase(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            EventTicketPurchaseData viewModel = new EventTicketPurchaseData();
+
+            viewModel.Event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.TicketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.EventTickets = await _context.EventTickets
+                .Where(m => m.TicketDesignID == viewModel.TicketDesign.TicketDesignID).ToListAsync();
+            
+            for (int i = 0; i < viewModel.EventTickets.Count(); i++)
+            {
+                viewModel.EventTickets.ElementAt(i).TicketType = await _context.TicketTypes
+                    .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.EventTickets.ElementAt(i).TicketTypeID);
+            }
+
+            return View(viewModel);
         }
 
         private bool TicketExists(int id)

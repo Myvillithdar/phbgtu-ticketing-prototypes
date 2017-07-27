@@ -9,8 +9,7 @@ namespace phbgtu_ticketing_prototypes.ViewModels
 	public class TicketEventDetailsData
 	{
 		public Event ticketEvent { get; set; }
-        public TicketDesign ticketDesign { get; set; }
         public IEnumerable<EventTicket> eventTickets { get; set; }
-		public IEnumerable<Ticket> tickets { get; set; }
+	   public IEnumerable<Ticket> tickets { get; set; }
     }
 }

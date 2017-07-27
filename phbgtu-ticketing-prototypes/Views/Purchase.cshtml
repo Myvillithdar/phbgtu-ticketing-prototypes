@@ -1,4 +1,3 @@
-@model phbgtu_ticketing_prototypes.ViewModels.EventTicketPurchaseData
 
 @{
     ViewData["Title"] = "Purchase";
@@ -30,7 +29,7 @@
 <div class="form-wrapper">
     <form method="post" asp-action="SaveTicket" enctype="multipart/form-data">
         <fieldset id="ticket-quantity" class="form-horizontal">
-            <legend>@Model.Event.EventName Ticket Purchase</legend>
+            <legend>{eventName} Ticket Purchase</legend>
             <div class="control-group">
                 <label class="control-label"><strong>Tickets are &#3647;168 for the selected event</strong></label>
                 <br />

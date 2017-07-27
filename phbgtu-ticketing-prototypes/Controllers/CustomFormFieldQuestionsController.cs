@@ -55,7 +55,8 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 customFormFieldQuestion.TicketDesignID = (int)id;
             }
 
-            ViewData["FormFieldDatatypeID"] = new SelectList(_context.CustomFormFieldDatatypes, "CustomFormFieldDatatypeID", "CustomFormFieldDatatypeID");
+            ViewData["FormFieldDatatypeID"] = new SelectList(_context.CustomFormFieldDatatypes, "CustomFormFieldDatatypeID", "DatatypeName");
+            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "DesignName");
             return View(customFormFieldQuestion);
         }
 
