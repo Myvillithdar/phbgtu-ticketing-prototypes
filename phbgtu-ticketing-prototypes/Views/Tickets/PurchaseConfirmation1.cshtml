@@ -1,0 +1,81 @@
+﻿@model phbgtu_ticketing_prototypes.Models.Ticket
+
+<!--the AT model directive allows you to access the movie that the controller
+    passed to the view by using a Model object that's strongly typed.-->
+<!-- in order to add an AT symbol in razor html, you do a double @@ -->
+
+@{
+    ViewData["Title"] = "Confirmation";
+}
+
+<h2>Your ticket purchase was successful!</h2>
+
+
+
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTicketID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventTicketID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UserAccountID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserAccountID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketStatusID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketStatusID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountPaid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AmountPaid)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateSold)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateSold)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AttendeeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AttendeeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketNumber)
+        </dd>
+    </dl>
+</div>
+
+
+
+
+
+
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TicketID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<!--<p>The value of your ticketID is:  @@ViewData["Message"]</p>-->
