@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
 //add ViewModel signature
+using phbgtu_ticketing_prototypes.Models.ViewModels;
 
 namespace phbgtu_ticketing_prototypes.Controllers
 {
@@ -213,29 +214,60 @@ namespace phbgtu_ticketing_prototypes.Controllers
 
 
 
-        public async Task<IActionResult> PurchaseConfirmation1(String email) //pass in an ID to find the specific Ticket
+        public async Task<IActionResult> PurchaseConfirmation1(int? userAccountID) //pass in an ID to find the specific Ticket
         {
 
-            
-            if (email == null)
-            {
-                return NotFound();
-            }
 
+            var viewModel = new PurchaseConfirmationData();
 
-            //read in from database
-            UserAccount = _context.UserAccounts.Include(x => x.Tickets)
-                (m => m.EmailAddress.Equals(email));
+            viewModel.UserAccounts = await _context.UserAccounts
+                    .Include(i => i.Tickets)
+                  .ToListAsync();
+
+            //viewModel.
+
 
             if (userAccountID == null)
             {
                 return NotFound();
             }
+            else
+            {
+                ViewData["UserAcountID"] = userAccountID.Value;
+
+                UserAccount user = viewModel.UserAccounts.Where(
+                    i => i.UserAccountID == userAccountID.Value).Single(); //find the user who has the userAccountID?
+                viewModel.Tickets = user.Tickets;
+
+
+                /*
+                var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
+                await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
+                foreach (Ticket ticket in selectedUser.Tickets)
+                {
+                    await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
+                }
+                viewModel.Tickets = selectedUser.Tickets;
+                */
+            }
+
+            return View(viewModel);
+
+
+
+
+            /*//find out the userAcount
+            UserAccount = _context.UserAccounts.Include(x => x.Tickets)
+                (m => m.EmailAddress.Equals(email));
+            */
+
+            //read in from database
+
 
 
             //create a view model of user accounts and tickets
             //get copy of user accounts
-                //include
+            //include
             //filter to single results
 
 
@@ -249,10 +281,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             //(m => email.Equals(m.EmailAddress));
 
             //make sure something was found before returning it
-            if (userAccountID == null)
-            {
-                return NotFound();
-            }
+
 
             /*
              
@@ -269,9 +298,9 @@ namespace phbgtu_ticketing_prototypes.Controllers
 
 
             //display the ticketID passed in
-            ViewData["Message"] = email;
+            //ViewData["Message"] = email;
 
-            return View(userAccountID);
+
 
 
 
