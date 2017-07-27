@@ -220,9 +220,9 @@ namespace phbgtu_ticketing_prototypes.Controllers
 
             var viewModel = new PurchaseConfirmationData();
 
-            viewModel.UserAccounts = await _context.UserAccounts
+            viewModel.account = await _context.UserAccounts
                     .Include(i => i.Tickets)
-                  .ToListAsync();
+                    .SingleOrDefaultAsync(m => m.UserAccountID == userAccountID);
 
             //viewModel.
 
@@ -235,9 +235,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             {
                 ViewData["UserAcountID"] = userAccountID.Value;
 
-                UserAccount user = viewModel.UserAccounts.Where(
-                    i => i.UserAccountID == userAccountID.Value).Single(); //find the user who has the userAccountID?
-                viewModel.Tickets = user.Tickets;
+                viewModel.Tickets = viewModel.account.Tickets;//.Select(s => s.Ticket);
 
 
                 /*

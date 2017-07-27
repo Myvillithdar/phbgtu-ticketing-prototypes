@@ -10,7 +10,7 @@ namespace phbgtu_ticketing_prototypes.Models.ViewModels
 
 
         public IEnumerable<Ticket> Tickets { get; set; }
-        public IEnumerable<UserAccount> UserAccounts { get; set; }
+        public UserAccount account { get; set; }
         /*
         public int TicketID { get; set; }
         public int EventTicketID { get; set; }
