@@ -171,9 +171,9 @@
                 @Html.DisplayFor(modelItem => item.UserAccount.UserAccountID)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TicketID"><span class="fa fa-list"></span> Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
+                <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
+                <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.TicketID"><span class="fa fa-list"></span> Details</a> |
+                <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
             </td>
         </tr>
 	   }
