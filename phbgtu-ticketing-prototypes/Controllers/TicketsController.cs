@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
+using phbgtu_ticketing_prototypes.ViewModels;
 
 namespace phbgtu_ticketing_prototypes.Controllers
 {
@@ -48,18 +49,28 @@ namespace phbgtu_ticketing_prototypes.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create(int? EventTicketID)
+        public async Task<IActionResult> Create(int? EventTicketID)
         {
             Ticket ticket = null;
+            EventTicket eventTicket = null;
             if (EventTicketID != null)
             {
                 ticket = new Ticket();
                 ticket.EventTicketID = (int)EventTicketID;
+                eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == EventTicketID);
             }
 
-            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "EventTicketID");
-            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID");
-            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID");
+            // load the ticket type names into the event tickets.
+            var eventTickets = await _context.EventTickets.ToListAsync();
+            for (int i = 0; i < eventTickets.Count(); i++)
+            {
+                eventTickets.ElementAt(i).TicketType = await _context.TicketTypes
+                        .SingleOrDefaultAsync(m => m.TicketTypeID == eventTickets.ElementAt(i).TicketTypeID);
+            }
+
+            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "TicketType.TicketTypeName", eventTicket);
+            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusName");
+            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserName");
             return View(ticket);
         }
 
@@ -191,10 +202,28 @@ namespace phbgtu_ticketing_prototypes.Controllers
             return View(ticket);
         }
 
-        public async Task<IActionResult> Purchase(int id)
+        // GET: Tickets/Purchase/5
+        // the ID is the EventID
+        public async Task<IActionResult> Purchase(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            EventTicketPurchaseData viewModel = new EventTicketPurchaseData();
 
-            return View();
+            viewModel.Event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.TicketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.EventTickets = await _context.EventTickets
+                .Where(m => m.TicketDesignID == viewModel.TicketDesign.TicketDesignID).ToListAsync();
+            
+            for (int i = 0; i < viewModel.EventTickets.Count(); i++)
+            {
+                viewModel.EventTickets.ElementAt(i).TicketType = await _context.TicketTypes
+                    .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.EventTickets.ElementAt(i).TicketTypeID);
+            }
+
+            return View(viewModel);
         }
 
         private bool TicketExists(int id)

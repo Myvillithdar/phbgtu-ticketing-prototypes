@@ -1,0 +1,35 @@
+@model IEnumerable<phbgtu_ticketing_prototypes.Models.TicketStatus>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create"><span class="fa fa-plus"></span> Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TicketStatusName)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketStatusName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TicketStatusID"><span class="fa fa-edit"></span> Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TicketStatusID"><span class="fa fa-list"></span> Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TicketStatusID"><span class="fa fa-remove"></span> Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,24 @@
+@model phbgtu_ticketing_prototypes.Models.TicketStatus
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2><span class="fa fa-list"></span> Details</h2>
+
+<div>
+    <h4>TicketStatus</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TicketStatusName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TicketStatusName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TicketStatusID"><span class="fa fa-edit"></span> Edit</a> |
+    <a asp-action="Index"><span class="fa fa-arrow-left"></span> Back to List</a>
+</div>
