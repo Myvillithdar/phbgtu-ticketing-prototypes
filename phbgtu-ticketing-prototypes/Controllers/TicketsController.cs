@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
+//add ViewModel signature
 
 namespace phbgtu_ticketing_prototypes.Controllers
 {
@@ -205,6 +206,72 @@ namespace phbgtu_ticketing_prototypes.Controllers
             ViewData["Message"] = ID;
 
             return View(ticket);
+
+
+
+        }
+
+
+
+        public async Task<IActionResult> PurchaseConfirmation1(String email) //pass in an ID to find the specific Ticket
+        {
+
+            
+            if (email == null)
+            {
+                return NotFound();
+            }
+
+
+            //read in from database
+            UserAccount = _context.UserAccounts.Include(x => x.Tickets)
+                (m => m.EmailAddress.Equals(email));
+
+            if (userAccountID == null)
+            {
+                return NotFound();
+            }
+
+
+            //create a view model of user accounts and tickets
+            //get copy of user accounts
+                //include
+            //filter to single results
+
+
+            //find out what the user acount ID is first
+            //based on that user id, look up all the tickets associated with it.
+            /*
+            var tickets = await _context.Tickets
+                .Include(Tickets)
+                */
+
+            //(m => email.Equals(m.EmailAddress));
+
+            //make sure something was found before returning it
+            if (userAccountID == null)
+            {
+                return NotFound();
+            }
+
+            /*
+             
+               var ticket = await _context.Tickets
+                .SingleOrDefaultAsync(m => m.TicketID == ID);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+    
+            */
+
+
+
+
+            //display the ticketID passed in
+            ViewData["Message"] = email;
+
+            return View(userAccountID);
 
 
 
