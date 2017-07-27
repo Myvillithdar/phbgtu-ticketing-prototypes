@@ -218,11 +218,11 @@ namespace phbgtu_ticketing_prototypes.Controllers
         {
 
 
-            var viewModel = new PurchaseConfirmationData();
+            var viewModel = new PurchaseConfirmationData(); //create new instance of the custom ViewModel
 
             viewModel.account = await _context.UserAccounts
                     .Include(i => i.Tickets)
-                    .SingleOrDefaultAsync(m => m.UserAccountID == userAccountID);
+                    .SingleOrDefaultAsync(m => m.UserAccountID == userAccountID); //where
 
             //viewModel.
 
@@ -252,6 +252,52 @@ namespace phbgtu_ticketing_prototypes.Controllers
             return View(viewModel);
 
 
+
+
+
+            /* //my original code from 3 AM
+            
+
+            var viewModel = new PurchaseConfirmationData();
+
+            viewModel.UserAccounts = await _context.UserAccounts
+                    .Include(i => i.Tickets)
+                  .ToListAsync();
+
+            //viewModel.
+
+
+            if (userAccountID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                ViewData["UserAcountID"] = userAccountID.Value;
+
+                UserAccount user = viewModel.UserAccounts.Where(
+                    i => i.UserAccountID == userAccountID.Value).Single(); //find the user who has the userAccountID?
+                viewModel.Tickets = user.Tickets//.Select(s => s.Ticket);
+
+
+                
+                //var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
+                //await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
+                //foreach (Ticket ticket in selectedUser.Tickets)
+                //{
+                //    await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
+                //}
+                //viewModel.Tickets = selectedUser.Tickets;
+                
+        }
+
+            */ 
+
+
+
+//*******************************************************************************************
+
+            //other ideas:
 
 
             /*//find out the userAcount
