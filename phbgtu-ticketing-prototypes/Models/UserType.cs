@@ -10,6 +10,8 @@ namespace phbgtu_ticketing_prototypes.Models
         public int UserTypeID { get; set; }
         public string UserTypeName { get; set; }
 
+        public ICollection<UserAccount> UserAccounts { get; set; }
+
         public UserType()
         {
 
