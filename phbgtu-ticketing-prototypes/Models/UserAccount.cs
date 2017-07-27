@@ -18,6 +18,8 @@ namespace phbgtu_ticketing_prototypes.Models
         [NotMapped]
         public UserType UserType { get; set; }
 
+        public ICollection<Ticket> Tickets { get; set; } //this is the physical one UserAccount to many Tickets
+
         public UserAccount()
         {
 
