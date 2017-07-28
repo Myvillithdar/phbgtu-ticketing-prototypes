@@ -226,6 +226,48 @@ namespace phbgtu_ticketing_prototypes.Controllers
             return View(viewModel);
         }
 
+        // POST: Tickets/Purchase
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Purchase(List<Ticket> tickets, int userAccountID, int[] ticketQuantity)
+        {
+            int ticketStatusID = (await _context.TicketStatuses
+                .SingleOrDefaultAsync(m => m.TicketStatusName == "Sold")).TicketStatusID;
+
+            Ticket ticket;
+            Ticket newTicket;
+            EventTicket eventTicket;
+            DateTime dateSold = DateTime.Now;
+
+            for (int i = 0; i < tickets.Count(); i++)
+            {
+                ticket = tickets.ElementAt(i);
+                eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == ticket.EventTicketID);
+
+                for (int j = 0; j < ticketQuantity[i]; j++)
+                {
+                    /* make a quantity loop here that will create new ticket objects,
+                     * assign them their values, then add them to the DB context.
+                     * After the loop, save changes to the DB context.
+                    */
+                    newTicket = new Ticket();
+                    newTicket.UserAccountID = userAccountID;
+                    newTicket.TicketStatusID = ticketStatusID;
+                    newTicket.EventTicketID = eventTicket.EventTicketID;
+                    newTicket.AmountPaid = eventTicket.TicketPrice;
+                    newTicket.DateSold = dateSold;
+                    newTicket.AttendeeName = "";
+                    newTicket.TicketNumber = Ticket.GenerateTicketNumber();
+                    _context.Add(newTicket);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            // change to something like this: return PurchaseConfirmation1(userAccountID);
+            return RedirectToAction("PurchaseConfirmation1/" + userAccountID);
+        }
+
         private bool TicketExists(int id)
         {
             return _context.Tickets.Any(e => e.TicketID == id);
