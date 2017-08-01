@@ -262,47 +262,74 @@ namespace phbgtu_ticketing_prototypes.Controllers
         }
 
 
+        /*
+            
+            if (id == null)
+            {
+                return NotFound();
+            }
+            EventTicketPurchaseData viewModel = new EventTicketPurchaseData();
+
+            viewModel.Event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.TicketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
+            viewModel.EventTickets = await _context.EventTickets
+                .Where(m => m.TicketDesignID == viewModel.TicketDesign.TicketDesignID).ToListAsync();
+            
+            for (int i = 0; i < viewModel.EventTickets.Count(); i++)
+            {
+                viewModel.EventTickets.ElementAt(i).TicketType = await _context.TicketTypes
+                    .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.EventTickets.ElementAt(i).TicketTypeID);
+            }
+
+            return View(viewModel);
+
+
+        */
 
         public async Task<IActionResult> PurchaseConfirmation1(int? userAccountID) //pass in an ID to find the specific Ticket
         {
-
-
-            var viewModel = new PurchaseConfirmationData(); //create new instance of the custom ViewModel
-
-            viewModel.account = await _context.UserAccounts
-                    .Include(i => i.Tickets)
-                    .SingleOrDefaultAsync(m => m.UserAccountID == userAccountID); //where
-
-            //viewModel.
 
 
             if (userAccountID == null)
             {
                 return NotFound();
             }
-            else
+
+            ViewData["UserAcountID"] = userAccountID.Value;
+
+            PurchaseConfirmationData viewModel = new PurchaseConfirmationData(); //create new instance of the custom ViewModel
+
+            viewModel.account = await _context.UserAccounts //find the specific user acount based on the userAccountID passed in
+                    .SingleOrDefaultAsync(m => m.UserAccountID == userAccountID); //where
+
+            viewModel.Tickets = await _context.Tickets.Include(t => t.EventTicket)  //copy tickets from the account to the viewModel Tickets
+                .Where(m => m.UserAccountID == viewModel.account.UserAccountID).ToListAsync();
+
+
+            for (int i = 0; i < viewModel.Tickets.Count(); i++)
             {
-                ViewData["UserAcountID"] = userAccountID.Value;
+                viewModel.Tickets.ElementAt(i).EventTicket.TicketType = await _context.TicketTypes
+                    .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.Tickets.ElementAt(i).EventTicket.TicketTypeID); //where
 
-                viewModel.Tickets = viewModel.account.Tickets;//.Select(s => s.Ticket);
+                viewModel.Tickets.ElementAt(i).CustomFormFieldResponses = await _context.CustomFormFieldResponses
+                    .Where(m => m.TicketID == viewModel.Tickets.ElementAt(i).TicketID).Include(t => t.CustomFormFieldQuestion).ToListAsync();
 
-
-                /*
-                var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
-                await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
-                foreach (Ticket ticket in selectedUser.Tickets)
-                {
-                    await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
-                }
-                viewModel.Tickets = selectedUser.Tickets;
-                */
             }
+
 
             return View(viewModel);
 
 
 
-
+            /*
+            var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
+            await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
+            foreach (Ticket ticket in selectedUser.Tickets)
+            {
+                await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
+            }
+            viewModel.Tickets = selectedUser.Tickets;
+            */
 
             /* //my original code from 3 AM
             
@@ -340,11 +367,11 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 
         }
 
-            */ 
+            */
 
 
 
-//*******************************************************************************************
+            //*******************************************************************************************
 
             //other ideas:
 
