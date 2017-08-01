@@ -34,44 +34,16 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <!--<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>-->
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Events<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Events" asp-action="Index">Events</a></li>
-                            <!--<li><a asp-area="" asp-controller="Events" asp-action="Create">Create Event</a></li>-->
-                            <li><a asp-area="" asp-controller="EventTickets" asp-action="Index">Event Tickets</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Tickets<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="Tickets" asp-action="Index">Tickets</a></li>
-                            <li><a asp-area="" asp-controller="Tickets" asp-action="Purchase" asp-route-id="1">Purchase Tickets</a></li>
-                            <li><a asp-area="" asp-controller="TicketStatus" asp-action="Index">Ticket Statuses</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Ticket Design<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="TicketDesigns" asp-action="Index">Ticket Designs</a></li>
-                            <li><a asp-area="" asp-controller="TicketTypes" asp-action="Index">Ticket Types</a></li>
-                            <li><a asp-area="" asp-controller="CustomFormFieldDatatypes" asp-action="Index">Form Field Types</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Users<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a asp-area="" asp-controller="UserAccounts" asp-action="Index">User Accounts</a></li>
-                            <li><a asp-area="" asp-controller="UserTypes" asp-action="Index">User Types</a></li>
-                        </ul>
-                    </li>
-			        <!--<li><a asp-area="" asp-controller="Events" asp-action="Index">Events</a></li>
-                    <li><a asp-area="" asp-controller="TicketDesigns" asp-action="Index">Ticket Design</a></li>
-                    <li><a asp-area="" asp-controller="EventTickets" asp-action="Index">Event Tickets</a></li>
-                    <li><a asp-area="" asp-controller="TicketTypes" asp-action="Index">Ticket Types</a></li>-->
+				<li><a asp-area="" asp-controller="Events" asp-action="Index">Events List</a></li>
+			     <li><a asp-area="" asp-controller="UserAccounts" asp-action="Index">Users</a></li>
+				<li class="dropdown">
+				    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Setup<span class="caret"></span></a>
+				    <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="TicketTypes" asp-action="Index">Available Ticket Types</a></li>
+				        <li><a asp-area="" asp-controller="TicketStatus" asp-action="Index">Ticket Statuses</a></li>
+                            <li><a asp-area="" asp-controller="CustomFormFieldDatatypes" asp-action="Index">Custom Form Field Datatypes</a></li>
+				    </ul>
+				</li>
                 </ul>
             </div>
         </div>
