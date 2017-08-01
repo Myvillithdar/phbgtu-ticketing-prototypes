@@ -35,8 +35,26 @@ namespace phbgtu_ticketing_prototypes.Models
         [NotMapped]
         public IEnumerable<CustomFormFieldResponse> CustomFormFieldResponses { get; set; }
 
+        [NotMapped]
+        public static Random rnd = new Random();
+
         public Ticket()
         {
         }
+
+        public static string GenerateTicketNumber()
+        {
+            char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+            int length = 8;
+
+            string randomString = "";
+
+            for (int i = 0; i < length; i++)
+            {
+                randomString = randomString + chars[rnd.Next(0, chars.Length - 1)];
+            }
+
+            return randomString;
+        }
     }
-}
+}        
