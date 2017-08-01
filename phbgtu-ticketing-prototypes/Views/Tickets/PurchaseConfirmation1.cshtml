@@ -17,14 +17,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>TicketID</th>
-                <th>EventTicketID</th>
-                <th>UserAccountID</th>
-                <th>TicketStatusID</th>
+                <th>TicketNumber</th>
+                <th>TicketTypeName</th>
                 <th>AmountPaid</th>
                 <th>DateSold</th>
                 <th>AttendeeName</th>
-                <th>TicketNumber</th>
             </tr>
         </thead>
 
@@ -35,29 +32,20 @@
             {
                 
                 <tr>
-                    <td>
-                        @item.TicketID
+                    <<td>
+                        @item.TicketNumber
                     </td>
                     <td>
-                        @item.EventTicketID
-                    </td>
-                    <td>
-                        @item.UserAccountID
-                    </td>
-                    <td>
-                        @item.TicketStatusID
+                        @item.EventTicket.TicketType.TicketTypeName
                     </td>
                     <td>
                         @item.AmountPaid
                     </td>
                     <td>
-                        @item.DateSold
+                        @item.DateSold.ToString()
                     </td>
                     <td>
                         @item.AttendeeName
-                    </td>
-                    <td>
-                        @item.TicketNumber
                     </td>
                 </tr>
             }
@@ -67,6 +55,12 @@
 
 }
 
+<!--
+    
+    T
+
+
+-->
 
 
 
@@ -77,62 +71,6 @@
 
 
 
-
-
-    <div>
-        <h4>Ticket</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.TicketID)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.TicketID)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.EventTicketID)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.EventTicketID)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.UserAccountID)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.UserAccountID)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.TicketStatusID)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.TicketStatusID)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.AmountPaid)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.AmountPaid)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.DateSold)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.DateSold)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.AttendeeName)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.AttendeeName)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.TicketNumber)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.TicketNumber)
-            </dd>
-        </dl>
-    </div>
 
 
 
@@ -141,7 +79,7 @@
 
 
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.TicketID">Edit</a> |
+        <a asp-action="Edit" asp-route-id="@Model.account.UserAccountID">Edit</a> |
         <a asp-action="Index">Back to List</a>
     </div>
 
