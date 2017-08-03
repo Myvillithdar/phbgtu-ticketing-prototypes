@@ -68,6 +68,9 @@
 			 <th>
 				Price per Ticket
 		      </th>
+		      <th>
+                    Available Online
+                </th>
                 <th>
                     Actions
                 </th>
@@ -83,8 +86,7 @@
             }
             else
             {
-                @foreach (var item in Model.eventTickets)
-                {
+                @foreach (var item in Model.eventTickets) {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.TicketType.TicketTypeName)
@@ -93,8 +95,11 @@
                             @Html.DisplayFor(modelItem => item.QuantityAvailable)
                         </td>
 				    <td>
-				    @Html.DisplayFor(modelItem => item.TicketPrice)
-				</td>
+                            @Html.DisplayFor(modelItem => item.TicketPrice)
+                        </td>
+                        <td>
+                            @(item.AvailableOnline ? "Yes" : "No")
+                        </td>
                         <td>
                             <a asp-controller="EventTickets" asp-action="Edit" asp-route-id="@item.EventTicketID"><span class="fa fa-edit"></span> Edit</a> |
                             <a asp-controller="EventTickets" asp-action="Details" asp-route-id="@item.EventTicketID"><span class="fa fa-list"></span> Details</a> |
