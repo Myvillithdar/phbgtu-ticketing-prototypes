@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +19,10 @@ namespace phbgtu_ticketing_prototypes.Models
         public int XDimension { get; set; }
 		public int YDimension { get; set; }
 
-		/*
+        [ForeignKey("TicketDesignID")]
+        public TicketDesign TicketDesign { get; set; }
+
+        /*
 		 * TODO I know xyCoordinates and dimensions are supposed to be arrays,
 		 * but the member fields above get stored directly in the database,
 		 * so they need to be database-compatible types.  We'll need a getter 
@@ -29,7 +33,7 @@ namespace phbgtu_ticketing_prototypes.Models
          * Then I modified the setters and created appropriate getters. (MT)
 		 */
 
-		public TicketDesignElement()
+        public TicketDesignElement()
         {
 
         }

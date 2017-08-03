@@ -17,6 +17,9 @@ namespace phbgtu_ticketing_prototypes.Models
         [ForeignKey("FormFieldDatatypeID")]
         public CustomFormFieldDatatype FormFieldDatatype { get; set; }
 
+        [ForeignKey("TicketDesignID")]
+        public TicketDesign TicketDesign { get; set; }
+
         [NotMapped]
         public IEnumerable<CustomFormFieldDataOption> FormFieldDataOptions { get; set; }
 

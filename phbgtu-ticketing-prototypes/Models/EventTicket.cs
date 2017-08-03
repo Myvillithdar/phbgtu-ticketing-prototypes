@@ -13,6 +13,7 @@ namespace phbgtu_ticketing_prototypes.Models
 		public int QuantityAvailable { get; set; }
         public int TicketTypeID { get; set; }
         public int TicketDesignID { get; set; }
+        public bool AvailableOnline { get; set; }
 
 		[DataType(DataType.Currency)]
 		public decimal TicketPrice { get; set; }
