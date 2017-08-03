@@ -13,20 +13,20 @@
 	   <input type="hidden" asp-for="TicketDesignID" value="@ViewBag.TicketDesignID"/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="QuantityAvailable" class="col-md-2 control-label"></label>
+            <label asp-for="TicketType" class="col-md-2 control-label">Ticket Type</label>
+            <div class="col-md-10">
+                <select asp-for="TicketTypeID" class="form-control" asp-items="ViewBag.TicketTypeID"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="QuantityAvailable" class="col-md-2 control-label">Quantity Available</label>
             <div class="col-md-10">
                 <input asp-for="QuantityAvailable" class="form-control" />
                 <span asp-validation-for="QuantityAvailable" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="TicketTypeID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="TicketTypeID" class ="form-control" asp-items="ViewBag.TicketTypeID"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="TicketPrice" class="col-md-2 control-label"></label>
+            <label asp-for="TicketPrice" class="col-md-2 control-label">Price</label>
             <div class="col-md-10">
                 <input asp-for="TicketPrice" class="form-control" />
                 <span asp-validation-for="TicketPrice" class="text-danger"></span>
