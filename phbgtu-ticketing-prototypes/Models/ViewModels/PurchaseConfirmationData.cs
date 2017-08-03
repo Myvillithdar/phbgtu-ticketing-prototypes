@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace phbgtu_ticketing_prototypes.Models.ViewModels
     public class PurchaseConfirmationData
     {
 
-
+        
         public IEnumerable<Ticket> Tickets { get; set; }
         public UserAccount account { get; set; }
         /*
