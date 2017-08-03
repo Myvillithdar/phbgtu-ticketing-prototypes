@@ -55,6 +55,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 		  }
 		  ViewData["TicketDesignID"] = ticketDesign.TicketDesignID;
 		  ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeName");
+		  ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
             return View();
         }
 
@@ -74,6 +75,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             }
             ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID", eventTicket.TicketDesignID);
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
+            ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == td.EventID);
             return View(eventTicket);
         }
 
@@ -90,8 +92,9 @@ namespace phbgtu_ticketing_prototypes.Controllers
             {
                 return NotFound();
             }
-            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID", eventTicket.TicketDesignID);
+            TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
+            ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == td.EventID);
             return View(eventTicket);
         }
 
@@ -106,6 +109,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             {
                 return NotFound();
             }
+            TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
 
             if (ModelState.IsValid)
             {
@@ -127,8 +131,8 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID", eventTicket.TicketDesignID);
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
+            ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == td.EventID);
             return View(eventTicket);
         }
 
