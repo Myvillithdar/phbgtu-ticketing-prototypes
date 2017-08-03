@@ -129,7 +129,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Events", new { id = td.EventID });
             }
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
             ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == td.EventID);
@@ -162,9 +162,10 @@ namespace phbgtu_ticketing_prototypes.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == id);
+            TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
             _context.EventTickets.Remove(eventTicket);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Events", new { id = td.EventID });
         }
 
         private bool EventTicketExists(int id)
