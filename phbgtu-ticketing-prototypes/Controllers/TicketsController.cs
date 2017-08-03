@@ -276,7 +276,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
         }
 
 
-        public async Task<IActionResult> PurchaseConfirmation(int? ID) //pass in an ID to find the specific Ticket
+        public async Task<IActionResult> PurchaseConfirmationOriginal(int? ID) //pass in an ID to find the specific Ticket
         {
 
             //read in from database
@@ -328,7 +328,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 
         */
 
-        public async Task<IActionResult> PurchaseConfirmation1(int? userAccountID) //pass in an ID to find the specific Ticket
+        public async Task<IActionResult> PurchaseConfirmation(int? userAccountID) //pass in an ID to find the specific Ticket
         {
 
 
