@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,10 +17,13 @@ namespace phbgtu_ticketing_prototypes.Models
         [DataType(DataType.Currency)]
 	   [Column(TypeName ="Money")]
         public decimal AmountPaid { get; set; }
+
 		[DataType(DataType.Date)]
 		[Column(TypeName = "Date")]
-		public DateTime? DateSold { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayName("Date Sold")]
+        public DateTime? DateSold { get; set; }
+        
         public string AttendeeName { get; set; }
         public string TicketNumber { get; set; }
 
