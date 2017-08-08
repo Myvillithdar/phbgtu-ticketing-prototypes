@@ -48,9 +48,9 @@
                         @Html.DisplayFor(modelItem => item.DateSold)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.TicketID"><span class="fa fa-list"></span> Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
+                        <a asp-action="PurchaseEdit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> <!--|
+                        <a asp-action="Details" asp-route-id="@@item.TicketID"><span class="fa fa-list"></span> Details</a> |
+                        <a asp-action="Delete" asp-route-id="@@item.TicketID"><span class="fa fa-remove"></span> Delete</a>-->
                     </td>
                 </tr>
             }
@@ -61,26 +61,14 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!--
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.account.UserAccountID">Edit</a> |
+        <a asp-action="Edit" asp-route-id="@@Model.account.UserAccountID">Edit</a> |
         <a asp-action="Index">Back to List</a>
     </div>
 
     <!--<p>The value of your ticketID is:  @@ViewData["Message"]</p>-->
+
+-->
+
+
