@@ -73,7 +73,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("EventID,EventName,TicketSalesEnabled,CustomMessage,BeginSales,EndSales")] Event @event)
+		public async Task<IActionResult> Create([Bind("EventID,EventName,CustomMessage,BeginSales,EndSales")] Event @event)
 		{
 			if (ModelState.IsValid)
 			{
