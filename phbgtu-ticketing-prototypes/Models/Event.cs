@@ -23,7 +23,7 @@ namespace phbgtu_ticketing_prototypes.Models
 
 		public Event()
 		{
-
+			TicketSalesEnabled = true;
 		}
 
 		public string GenerateSalesReport()
