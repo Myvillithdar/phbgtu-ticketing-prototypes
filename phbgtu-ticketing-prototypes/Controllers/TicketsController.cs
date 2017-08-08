@@ -306,29 +306,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
         }
 
 
-        /*
-            
-            if (id == null)
-            {
-                return NotFound();
-            }
-            EventTicketPurchaseData viewModel = new EventTicketPurchaseData();
-
-            viewModel.Event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
-            viewModel.TicketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
-            viewModel.EventTickets = await _context.EventTickets
-                .Where(m => m.TicketDesignID == viewModel.TicketDesign.TicketDesignID).ToListAsync();
-            
-            for (int i = 0; i < viewModel.EventTickets.Count(); i++)
-            {
-                viewModel.EventTickets.ElementAt(i).TicketType = await _context.TicketTypes
-                    .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.EventTickets.ElementAt(i).TicketTypeID);
-            }
-
-            return View(viewModel);
-
-
-        */
+        
 
         public async Task<IActionResult> PurchaseConfirmation(int? userAccountID) //pass in an ID to find the specific Ticket
         {
@@ -364,110 +342,64 @@ namespace phbgtu_ticketing_prototypes.Controllers
             return View(viewModel);
 
 
-
-            /*
-            var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
-            await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
-            foreach (Ticket ticket in selectedUser.Tickets)
-            {
-                await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
-            }
-            viewModel.Tickets = selectedUser.Tickets;
-            */
-
-            /* //my original code from 3 AM
-            
-
-            var viewModel = new PurchaseConfirmationData();
-
-            viewModel.UserAccounts = await _context.UserAccounts
-                    .Include(i => i.Tickets)
-                  .ToListAsync();
-
-            //viewModel.
+        } //end PurchaseConfirmation
 
 
-            if (userAccountID == null)
+        // GET: Tickets/PurchaseEdit/5
+        public async Task<IActionResult> PurchaseEdit(int? id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
-            else
-            {
-                ViewData["UserAcountID"] = userAccountID.Value;
 
-                UserAccount user = viewModel.UserAccounts.Where(
-                    i => i.UserAccountID == userAccountID.Value).Single(); //find the user who has the userAccountID?
-                viewModel.Tickets = user.Tickets//.Select(s => s.Ticket);
-
-
-                
-                //var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
-                //await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
-                //foreach (Ticket ticket in selectedUser.Tickets)
-                //{
-                //    await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
-                //}
-                //viewModel.Tickets = selectedUser.Tickets;
-                
-        }
-
-            */
-
-
-
-            //*******************************************************************************************
-
-            //other ideas:
-
-
-            /*//find out the userAcount
-            UserAccount = _context.UserAccounts.Include(x => x.Tickets)
-                (m => m.EmailAddress.Equals(email));
-            */
-
-            //read in from database
-
-
-
-            //create a view model of user accounts and tickets
-            //get copy of user accounts
-            //include
-            //filter to single results
-
-
-            //find out what the user acount ID is first
-            //based on that user id, look up all the tickets associated with it.
-            /*
-            var tickets = await _context.Tickets
-                .Include(Tickets)
-                */
-
-            //(m => email.Equals(m.EmailAddress));
-
-            //make sure something was found before returning it
-
-
-            /*
-             
-               var ticket = await _context.Tickets
-                .SingleOrDefaultAsync(m => m.TicketID == ID);
+            var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.TicketID == id);
             if (ticket == null)
             {
                 return NotFound();
             }
-    
-            */
+            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "EventTicketID", ticket.EventTicketID);
+            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID", ticket.TicketStatusID);
+            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID", ticket.UserAccountID);
+            return View(ticket);
+        }
 
+        // POST: Tickets/PurchaseEdit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PurchaseEdit(int id, [Bind("TicketID,EventTicketID,UserAccountID,TicketStatusID,AmountPaid,DateSold,AttendeeName,TicketNumber")] Ticket ticket)
+        {
+            if (id != ticket.TicketID)
+            {
+                return NotFound();
+            }
 
-
-
-            //display the ticketID passed in
-            //ViewData["Message"] = email;
-
-
-
-
-
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(ticket);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TicketExists(ticket.TicketID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("PurchaseConfirmation", new { userAccountID = ticket.UserAccountID.ToString() });
+            }
+            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "EventTicketID", ticket.EventTicketID);
+            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID", ticket.TicketStatusID);
+            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID", ticket.UserAccountID);
+            return View(ticket);
         }
 
 
