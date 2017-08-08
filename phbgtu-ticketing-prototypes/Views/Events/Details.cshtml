@@ -4,38 +4,26 @@
     ViewData["Title"] = "Details";
 }
 
-<h2><span class="fa fa-list"></span> Details</h2>
+<h2>@Html.DisplayFor(model => model.ticketEvent.EventName)</h2>
 
 <div>
-    <h4>Event</h4>
+    <h4><span class="fa fa-list"></span> Details</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.EventName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ticketEvent.EventName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.TicketSalesEnabled)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ticketEvent.TicketSalesEnabled)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.CustomMessage)
+            Custom Message
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ticketEvent.CustomMessage)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.BeginSales)
+            Begin Sales
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ticketEvent.BeginSales)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.EndSales)
+            End Sales
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ticketEvent.EndSales)
@@ -68,6 +56,9 @@
 			 <th>
 				Price per Ticket
 		      </th>
+		      <th>
+                    Available Online
+                </th>
                 <th>
                     Actions
                 </th>
@@ -83,8 +74,7 @@
             }
             else
             {
-                @foreach (var item in Model.eventTickets)
-                {
+                @foreach (var item in Model.eventTickets) {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.TicketType.TicketTypeName)
@@ -93,11 +83,13 @@
                             @Html.DisplayFor(modelItem => item.QuantityAvailable)
                         </td>
 				    <td>
-				    @Html.DisplayFor(modelItem => item.TicketPrice)
-				</td>
+                            @Html.DisplayFor(modelItem => item.TicketPrice)
+                        </td>
+                        <td>
+                            @(item.AvailableOnline ? "Yes" : "No")
+                        </td>
                         <td>
                             <a asp-controller="EventTickets" asp-action="Edit" asp-route-id="@item.EventTicketID"><span class="fa fa-edit"></span> Edit</a> |
-                            <a asp-controller="EventTickets" asp-action="Details" asp-route-id="@item.EventTicketID"><span class="fa fa-list"></span> Details</a> |
                             <a asp-controller="EventTickets" asp-action="Delete" asp-route-id="@item.EventTicketID"><span class="fa fa-remove"></span> Delete</a>
                         </td>
                     </tr>
