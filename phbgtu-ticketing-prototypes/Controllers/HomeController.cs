@@ -10,7 +10,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Events");
         }
 
         public IActionResult About()
