@@ -217,7 +217,9 @@ namespace phbgtu_ticketing_prototypes.Controllers
             viewModel.Event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
             viewModel.TicketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
             viewModel.EventTickets = await _context.EventTickets
-                .Where(m => m.TicketDesignID == viewModel.TicketDesign.TicketDesignID).ToListAsync();
+                .Where(m => m.TicketDesignID == viewModel.TicketDesign.TicketDesignID)
+                .Where(m => m.AvailableOnline == true)
+                .ToListAsync();
             
             for (int i = 0; i < viewModel.EventTickets.Count(); i++)
             {

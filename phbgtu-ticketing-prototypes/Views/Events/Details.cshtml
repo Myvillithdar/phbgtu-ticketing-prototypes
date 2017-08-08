@@ -1,13 +1,13 @@
 ﻿@model phbgtu_ticketing_prototypes.ViewModels.TicketEventDetailsData
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Event Details";
 }
 
 <h2>@Html.DisplayFor(model => model.ticketEvent.EventName)</h2>
 
 <div>
-    <h4><span class="fa fa-list"></span> Details</h4>
+    <h4><span class="fa fa-list"></span> Event Details</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -31,8 +31,8 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ticketEvent.EventID"><span class="fa fa-edit"></span> Edit</a> |
-    <a asp-action="Index"><span class="fa fa-arrow-left"></span> Back to List</a>
+    <a asp-action="Index"><span class="fa fa-arrow-left"></span> Back to List</a> |
+    <a asp-action="Edit" asp-route-id="@Model.ticketEvent.EventID"><span class="fa fa-edit"></span> Edit</a>
 </div>
 
 <br />
