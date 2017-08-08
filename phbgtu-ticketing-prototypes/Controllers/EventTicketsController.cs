@@ -49,14 +49,13 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // GET: EventTickets/Create
         public async Task<IActionResult> Create(int? id)
         {
-            TicketDesign ticketDesign = null;
-            if (id != null)
-            {
-                ticketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
-            }
-
-            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "DesignName", ticketDesign);
-            ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeName");
+            var ticketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
+		  if (ticketDesign == null) {
+			 return NotFound();
+		  }
+		  ViewData["TicketDesignID"] = ticketDesign.TicketDesignID;
+		  ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeName");
+		  ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
             return View();
         }
 
@@ -65,16 +64,18 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventTicketID,QuantityAvailable,TicketTypeID,TicketDesignID,TicketPrice")] EventTicket eventTicket)
+        public async Task<IActionResult> Create([Bind("EventTicketID,QuantityAvailable,TicketTypeID,TicketDesignID,TicketPrice,AvailableOnline")] EventTicket eventTicket)
         {
+		  TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
             if (ModelState.IsValid)
             {
                 _context.Add(eventTicket);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Events", new { id = td.EventID });
             }
             ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID", eventTicket.TicketDesignID);
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
+            ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == td.EventID);
             return View(eventTicket);
         }
 
@@ -91,8 +92,9 @@ namespace phbgtu_ticketing_prototypes.Controllers
             {
                 return NotFound();
             }
-            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID", eventTicket.TicketDesignID);
+            TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
+            ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == td.EventID);
             return View(eventTicket);
         }
 
@@ -101,12 +103,13 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EventTicketID,QuantityAvailable,TicketTypeID,TicketDesignID,TicketPrice")] EventTicket eventTicket)
+        public async Task<IActionResult> Edit(int id, [Bind("EventTicketID,QuantityAvailable,TicketTypeID,TicketDesignID,TicketPrice,AvailableOnline")] EventTicket eventTicket)
         {
             if (id != eventTicket.EventTicketID)
             {
                 return NotFound();
             }
+            TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
 
             if (ModelState.IsValid)
             {
@@ -126,10 +129,10 @@ namespace phbgtu_ticketing_prototypes.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Events", new { id = td.EventID });
             }
-            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignID", eventTicket.TicketDesignID);
             ViewData["TicketTypeID"] = new SelectList(_context.TicketTypes, "TicketTypeID", "TicketTypeID", eventTicket.TicketTypeID);
+            ViewData["Event"] = await _context.Events.SingleOrDefaultAsync(m => m.EventID == td.EventID);
             return View(eventTicket);
         }
 
@@ -159,9 +162,10 @@ namespace phbgtu_ticketing_prototypes.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == id);
+            TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == eventTicket.TicketDesignID);
             _context.EventTickets.Remove(eventTicket);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Events", new { id = td.EventID });
         }
 
         private bool EventTicketExists(int id)

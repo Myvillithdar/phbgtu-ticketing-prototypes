@@ -1,41 +1,29 @@
-@model phbgtu_ticketing_prototypes.ViewModels.TicketEventDetailsData
+﻿@model phbgtu_ticketing_prototypes.ViewModels.TicketEventDetailsData
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2><span class="fa fa-list"></span> Details</h2>
+<h2>@Html.DisplayFor(model => model.ticketEvent.EventName)</h2>
 
 <div>
-    <h4>Event</h4>
+    <h4><span class="fa fa-list"></span> Details</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.EventName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ticketEvent.EventName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.TicketSalesEnabled)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ticketEvent.TicketSalesEnabled)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.CustomMessage)
+            Custom Message
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ticketEvent.CustomMessage)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.BeginSales)
+            Begin Sales
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ticketEvent.BeginSales)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ticketEvent.EndSales)
+            End Sales
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ticketEvent.EndSales)
@@ -48,22 +36,7 @@
 </div>
 
 <br />
-<h3>Tickets for this Event</h3>
 <hr />
-
-@if (Model.ticketDesign == null)
-{
-    <p>
-        Event ticket details are not yet configured for this event. <a asp-controller="TicketDesigns" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID">Click here</a> to add event ticketing to this event.
-    </p>
-}
-
-else
-{
-   <p>
-       <a asp-controller="TicketDesigns" asp-action="Details" asp-route-id="@Model.ticketDesign.TicketDesignID"><span class="fa fa-search"></span> Click here</a> to view the ticket design for this event.
-   </p>
-}
 
 <br />
 
@@ -80,6 +53,12 @@ else
                 <th>
                     Total Quantity Available
                 </th>
+			 <th>
+				Price per Ticket
+		      </th>
+		      <th>
+                    Available Online
+                </th>
                 <th>
                     Actions
                 </th>
@@ -89,14 +68,13 @@ else
             @if (Model.eventTickets.Count() == 0)
             {
                 <tr>
-                    <td colspan="3">No ticket types or available quantities are set for this event. <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketDesign.TicketDesignID">Click here</a> to add ticket types and quantities to this event.</td>
+                    <td colspan="4">No ticket types or available quantities are set for this event. <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID">Click here</a> to add ticket types and quantities to this event.</td>
                 </tr>
 
             }
             else
             {
-                @foreach (var item in Model.eventTickets)
-                {
+                @foreach (var item in Model.eventTickets) {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.TicketType.TicketTypeName)
@@ -104,73 +82,94 @@ else
                         <td>
                             @Html.DisplayFor(modelItem => item.QuantityAvailable)
                         </td>
+				    <td>
+                            @Html.DisplayFor(modelItem => item.TicketPrice)
+                        </td>
+                        <td>
+                            @(item.AvailableOnline ? "Yes" : "No")
+                        </td>
                         <td>
                             <a asp-controller="EventTickets" asp-action="Edit" asp-route-id="@item.EventTicketID"><span class="fa fa-edit"></span> Edit</a> |
-                            <a asp-controller="EventTickets" asp-action="Details" asp-route-id="@item.EventTicketID"><span class="fa fa-list"></span> Details</a> |
                             <a asp-controller="EventTickets" asp-action="Delete" asp-route-id="@item.EventTicketID"><span class="fa fa-remove"></span> Delete</a>
                         </td>
                     </tr>
                 }
                 <tr>
-                    <td colspan="3">
-                        <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketDesign.TicketDesignID"><span class="fa fa-plus"></span> Click here</a> to add ticket types and available quantities to this event.
+                    <td colspan="4">
+                        <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID"><span class="fa fa-plus"></span> Click here</a> to add ticket types and available quantities to this event.
                     </td>
                 </tr>
             }
 
         </tbody>
     </table>
+}
 
-    <br />
-    <hr />
-    <h4>Distributed Tickets</h4>
+<br />
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>
-                    Ticket ID
-                </th>
-                <th>
-                    Event Ticket Number
-                </th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.tickets.Count() == 0)
-            {
-                <tr>
-                    <td colspan="3">
-                        No tickets created for this event. <a asp-controller="Tickets" asp-action="Create" asp-route-id="Model.eventTickets.EventTicketID">Click here</a> to create new tickets.
-                    </td>
-                </tr>
+<h3>Tickets for this Event</h3>
 
-            }
-            else
-            {
-                @foreach (var item in Model.tickets)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TicketID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TicketNumber)
-                        </td>
-                        <td>
-                            <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
-                            <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.TicketID"><span class="fa fa-list"></span> Details</a> |
-                            <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
-                        </td>
-                    </tr>
-                }
-                <tr>
-                    <td colspan="3">
-                        <a asp-controller="Tickets" asp-action="Create" asp-route-id="Model.eventTickets.EventTicketID"><span class="fa fa-plus"></span> Create New</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+@if (Model.tickets != null) {
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Amount Paid
+            </th>
+            <th>
+                Date Sold
+            </th>
+            <th>
+                Attendee Name
+            </th>
+            <th>
+                Ticket Number
+            </th>
+            <th>
+                Event Ticket
+            </th>
+            <th>
+                Ticket Status
+            </th>
+            <th>
+                User Account
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.tickets) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountPaid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateSold)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AttendeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventTicket.EventTicketID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAccount.UserAccountID)
+            </td>
+            <td>
+                <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
+                <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.TicketID"><span class="fa fa-list"></span> Details</a> |
+                <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
+            </td>
+        </tr>
+	   }
+    </tbody>
+</table>
+
 }

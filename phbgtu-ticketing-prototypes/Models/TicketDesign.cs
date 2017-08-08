@@ -22,7 +22,10 @@ namespace phbgtu_ticketing_prototypes.Models
         [NotMapped]
 		public IEnumerable<CustomFormFieldQuestion> CustomFormFields { get; set; }
 
-		public TicketDesign()
+        [NotMapped]
+        public IEnumerable<EventTicket> EventTickets { get; set; }
+
+        public TicketDesign()
 	    {
 
 	    }

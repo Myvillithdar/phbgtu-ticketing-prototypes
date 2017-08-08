@@ -15,8 +15,11 @@ namespace phbgtu_ticketing_prototypes.Models
         public string Password { get; set; }
         public string PasswordHint { get; set; }
 
-        [NotMapped]
+        [ForeignKey("UserTypeID")]
         public UserType UserType { get; set; }
+
+        [NotMapped]
+        public ICollection<Ticket> Tickets { get; set; } //this is the physical relation - one UserAccount to many Tickets
 
         public UserAccount()
         {

@@ -4,40 +4,42 @@
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Edit Available Tickets</h2>
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>EventTicket</h4>
+        <h4>@ViewBag.Event.EventName</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="EventTicketID" />
+    <input type="hidden" asp-for="TicketDesignID" />
         <div class="form-group">
-            <label asp-for="QuantityAvailable" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="QuantityAvailable" class="form-control" />
-                <span asp-validation-for="QuantityAvailable" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="TicketTypeID" class="control-label col-md-2"></label>
+            <label asp-for="TicketTypeID" class="control-label col-md-2">Ticket Type</label>
             <div class="col-md-10">
                 <select asp-for="TicketTypeID" class="form-control" asp-items="ViewBag.TicketTypeID"></select>
                 <span asp-validation-for="TicketTypeID" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="TicketDesignID" class="control-label col-md-2"></label>
+            <label asp-for="QuantityAvailable" class="col-md-2 control-label">Quantity Available</label>
             <div class="col-md-10">
-                <select asp-for="TicketDesignID" class="form-control" asp-items="ViewBag.TicketDesignID"></select>
-                <span asp-validation-for="TicketDesignID" class="text-danger"></span>
+                <input asp-for="QuantityAvailable" class="form-control" />
+                <span asp-validation-for="QuantityAvailable" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="TicketPrice" class="col-md-2 control-label"></label>
+            <label asp-for="TicketPrice" class="col-md-2 control-label">Price</label>
             <div class="col-md-10">
                 <input asp-for="TicketPrice" class="form-control" />
                 <span asp-validation-for="TicketPrice" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="AvailableOnline" />
+                    <label>Available for online purchase</label>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -49,6 +51,6 @@
 </form>
 
 <div>
-    <a asp-action="Index"><span class="fa fa-arrow-left"></span> Back to List</a>
+    <a asp-controller="Events" asp-action="Details" asp-route-id="@ViewBag.Event.EventID"><span class="fa fa-arrow-left"></span> Back to List</a>
 </div>
 

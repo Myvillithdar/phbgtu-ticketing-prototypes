@@ -4,7 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h1 style="text-align: center;">PHBGTU Ticketing System Prototype</h1>
+
+<br/>
+
+<h2>List of Events</h2>
 
 <p>
     <a asp-action="Create"><span class="fa fa-plus"></span> Create New</a>
@@ -49,6 +53,7 @@
                 @Html.DisplayFor(modelItem => item.EndSales)
             </td>
             <td>
+		      <a asp-controller="Tickets" asp-action="Purchase" asp-route-id="@item.EventID"><span class="fa fa-edit"></span>Purchase Tickets</a> |
                 <a asp-action="Edit" asp-route-id="@item.EventID"><span class="fa fa-edit"></span> Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.EventID"><span class="fa fa-list"></span> Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.EventID"><span class="fa fa-remove"></span> Delete</a>
