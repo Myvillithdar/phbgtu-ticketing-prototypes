@@ -226,9 +226,7 @@
     $(function () {
         var maxTicketsPerCustomer = 10;
         var option = "<option value=\"{#}\">{#}</option>";
-        $("select[name=numTickets]").append(option.replace(/\{#\}/g, ' '));
-        $("select.TicketQuantity").append(option.replace(/\{#\}/g, '0'));
-        for (var i = 1; i <= maxTicketsPerCustomer; i++) {
+        for (var i = 0; i <= maxTicketsPerCustomer; i++) {
             $("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
             $("select.TicketQuantity").append(option.replace(/\{#\}/g, i));
         }
@@ -250,7 +248,7 @@
         return attendeeFieldContent.join("").replace(/\{#\}/g, index);
     }
 
-    $("select[name=numTickets]").change(function () {
+    $("select[name=nu&mTickets]").change(function () {
 
         var attendeeFields = $(".attendee-field");
         var attendeeFieldCount = attendeeFields.length;

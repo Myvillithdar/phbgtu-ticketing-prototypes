@@ -1,4 +1,4 @@
-﻿@model phbgtu_ticketing_prototypes.Models.ViewModels.PurchaseConfirmationData
+﻿@model phbgtu_ticketing_prototypes.ViewModels.PurchaseConfirmationData
 
 <!--the AT model directive allows you to access the movie that the controller
     passed to the view by using a Model object that's strongly typed.-->
@@ -55,6 +55,16 @@
                 </tr>
             }
         </tbody>
+        <tfoot>
+            <tr>
+                <th>
+                    Total:
+                </th>
+                <td colspan="5">
+                    &#3647; @Model.totalPrice
+                </td>
+            </tr>
+        </tfoot>
 
     </table>
 

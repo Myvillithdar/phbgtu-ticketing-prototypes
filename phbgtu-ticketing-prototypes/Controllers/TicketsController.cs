@@ -9,7 +9,6 @@ using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
 using phbgtu_ticketing_prototypes.ViewModels;
 //add ViewModel signature
-using phbgtu_ticketing_prototypes.Models.ViewModels;
 
 namespace phbgtu_ticketing_prototypes.Controllers
 {
@@ -248,28 +247,33 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 ticket = tickets.ElementAt(i);
                 eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == ticket.EventTicketID);
 
-                for (int j = 0; j < ticketQuantity[i]; j++)
+                try
                 {
-                    /* make a quantity loop here that will create new ticket objects,
-                     * assign them their values, then add them to the DB context.
-                     * After the loop, save changes to the DB context.
-                    */
-                    newTicket = new Ticket();
-                    newTicket.UserAccountID = userAccountID;
-                    newTicket.TicketStatusID = ticketStatusID;
-                    newTicket.EventTicketID = eventTicket.EventTicketID;
-                    newTicket.AmountPaid = eventTicket.TicketPrice;
-                    newTicket.DateSold = dateSold;
-                    newTicket.AttendeeName = "";
-                    newTicket.TicketNumber = Ticket.GenerateTicketNumber();
-                    _context.Add(newTicket);
+                    for (int j = 0; j < ticketQuantity[i]; j++)
+                    {
+                        /* make a quantity loop here that will create new ticket objects,
+                         * assign them their values, then add them to the DB context.
+                         * After the loop, save changes to the DB context.
+                        */
+                        newTicket = new Ticket();
+                        newTicket.UserAccountID = userAccountID;
+                        newTicket.TicketStatusID = ticketStatusID;
+                        newTicket.EventTicketID = eventTicket.EventTicketID;
+                        newTicket.AmountPaid = eventTicket.TicketPrice;
+                        newTicket.DateSold = dateSold;
+                        newTicket.AttendeeName = "";
+                        newTicket.TicketNumber = Ticket.GenerateTicketNumber();
+                        _context.Add(newTicket);
+                    }
                 }
+                catch (IndexOutOfRangeException ex) { }
+                
             }
 
             await _context.SaveChangesAsync();
 
             // change to something like this: return PurchaseConfirmation1(userAccountID);
-            return RedirectToAction("PurchaseConfirmation1/" + userAccountID);
+            return await PurchaseConfirmation(userAccountID);
         }
 
         private bool TicketExists(int id)
@@ -327,6 +331,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
             viewModel.Tickets = await _context.Tickets.Include(t => t.EventTicket)  //copy tickets from the account to the viewModel Tickets
                 .Where(m => m.UserAccountID == viewModel.account.UserAccountID).ToListAsync();
 
+            viewModel.totalPrice = 0;
 
             for (int i = 0; i < viewModel.Tickets.Count(); i++)
             {
@@ -336,10 +341,11 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 viewModel.Tickets.ElementAt(i).CustomFormFieldResponses = await _context.CustomFormFieldResponses
                     .Where(m => m.TicketID == viewModel.Tickets.ElementAt(i).TicketID).Include(t => t.CustomFormFieldQuestion).ToListAsync();
 
+                viewModel.totalPrice += viewModel.Tickets.ElementAt(i).EventTicket.TicketPrice;
             }
 
 
-            return View(viewModel);
+            return View("PurchaseConfirmation", viewModel);
 
 
         } //end PurchaseConfirmation
