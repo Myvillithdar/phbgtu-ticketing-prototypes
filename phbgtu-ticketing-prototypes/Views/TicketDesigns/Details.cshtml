@@ -76,7 +76,7 @@
                         @Html.DisplayFor(modelItem => item.FormFieldDatatype.DatatypeName)
                     </td>
                     <td>
-                        @try
+                        @if (item.FormFieldDataOptions.Count() > 0)
                         {
                             <ul>
                                 @foreach (var option in item.FormFieldDataOptions)
@@ -85,15 +85,15 @@
                                 }
                             </ul>
                         }
-                        catch(Exception ex) {
+                        else {
                             <span>N/A</span>
                          }
 
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-edit"></span> Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-list"></span> Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-remove"></span> Delete</a>
+                        <a asp-controller="CustomFormFieldQuestions" asp-action="Edit" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-edit"></span> Edit</a> |
+                        <a asp-controller="CustomFormFieldQuestions" asp-action="Details" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-list"></span> Details</a> |
+                        <a asp-controller="CustomFormFieldQuestions" asp-action="Delete" asp-route-id="@item.CustomFormFieldQuestionID"><span class="fa fa-remove"></span> Delete</a>
                     </td>
                 </tr>
             }

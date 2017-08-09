@@ -40,3 +40,68 @@
     <a asp-action="Edit" asp-route-id="@Model.CustomFormFieldQuestionID"><span class="fa fa-edit"></span> Edit</a> |
     <a asp-action="Index"><span class="fa fa-arrow-left"></span> Back to List</a>
 </div>
+<div style="width:50%;">
+    @if (Model.FormFieldDatatype.DatatypeName == "Select")
+    {
+        <h3>Field Options</h3>
+
+        if (Model.FormFieldDataOptions.Count() == 0)
+        {
+
+            <span>No pre-set options. <a asp-controller="CustomFormFieldDataOptions" asp-action="Create" asp-route-id="@Model.CustomFormFieldQuestionID"><span class="fa fa-plus"></span> Click here</a> to add.</span>
+
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Option
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @try
+                    {
+
+                        @foreach (var option in Model.FormFieldDataOptions)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => option.DataOptionValue)
+                                </td>
+                                <td>
+                                    <a asp-controller="CustomFormFieldDataOptions" asp-action="Edit" asp-route-id="@option.CustomFormFieldDataOptionID"><span class="fa fa-edit"></span> Edit</a> |
+                                    <!--<a asp-controller="CustomFormFieldDataOptions" asp-action="Details" asp-route-id="@option.CustomFormFieldDataOptionID"><span class="fa fa-list"></span> Details</a> | -->
+                                    <a asp-controller="CustomFormFieldDataOptions" asp-action="Delete" asp-route-id="@option.CustomFormFieldDataOptionID"><span class="fa fa-remove"></span> Delete</a>
+                                </td>
+                            </tr>
+
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        <tr>
+                            <td colspan="2">
+                                No pre-set options.
+                                @if (Model.FormFieldDatatype.DatatypeName == "Select")
+                        {
+                                    <span><a asp-controller="CustomFormFidleDataOptions" asp-action="Create" asp-route-id="@Model.CustomFormFieldQuestionID"><span class="fa fa-plus"></span> Click here</a> to add pre-set options.</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        }
+    }
+    
+</div>
+
