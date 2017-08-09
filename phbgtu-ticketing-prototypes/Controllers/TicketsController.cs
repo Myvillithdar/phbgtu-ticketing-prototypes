@@ -232,20 +232,29 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // POST: Tickets/Purchase
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Purchase(List<Ticket> tickets, int userAccountID, int[] ticketQuantity)
+        public async Task<IActionResult> Purchase(List<Ticket> tickets, int userAccountID, int eventID, int[] ticketQuantity)
         {
             int ticketStatusID = (await _context.TicketStatuses
                 .SingleOrDefaultAsync(m => m.TicketStatusName == "Sold")).TicketStatusID;
+            
+            
 
             Ticket ticket;
             Ticket newTicket;
+            List<EventTicket> eventTickets = new List<EventTicket>();
             EventTicket eventTicket;
             DateTime dateSold = DateTime.Now;
 
             for (int i = 0; i < tickets.Count(); i++)
             {
                 ticket = tickets.ElementAt(i);
-                eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == ticket.EventTicketID);
+                eventTickets.Add(await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == ticket.EventTicketID));
+            }
+
+            for (int i = 0; i < tickets.Count(); i++)
+            {
+                ticket = tickets.ElementAt(i);
+                eventTicket = eventTickets.SingleOrDefault(m => m.EventTicketID == ticket.EventTicketID);
 
                 try
                 {
@@ -265,15 +274,59 @@ namespace phbgtu_ticketing_prototypes.Controllers
                         newTicket.TicketNumber = Ticket.GenerateTicketNumber();
                         _context.Add(newTicket);
                     }
+                    
+                    // Adds default blank responses for all tickets (if applicable).
+                    AddInitialResponses(eventTicket);
                 }
                 catch (IndexOutOfRangeException ex) { }
+
+            }
+
+            _context.SaveChanges();
+
+
+
+            // change to something like this: return PurchaseConfirmation1(userAccountID);
+            return RedirectToAction("PurchaseConfirmation", new { userAccountID = userAccountID, eventID = eventID });
+            // return await PurchaseConfirmation(userAccountID, eventID);
+        }
+
+        /// <summary>
+        /// Adds blank responses for all tickets that have questions, but no responses.
+        /// </summary>
+        /// <param name="eventTicket"></param>
+        private void AddInitialResponses(EventTicket eventTicket)
+        {
+            List<CustomFormFieldQuestion> questions;
+            List<Ticket> tickets;
+            List<CustomFormFieldResponse> responses;
+            CustomFormFieldResponse newResponse;
+
+
+            // Add placeholders for the CustomFormFieldResponses.
+            questions = _context.CustomFormFieldQuestions
+                .Where(m => m.TicketDesignID == eventTicket.TicketDesignID)
+                .ToList();
+            tickets = _context.Tickets.Where(m => m.EventTicketID == eventTicket.EventTicketID).ToList();
+
+            foreach (var ticket in tickets)
+            {
+                responses = _context.CustomFormFieldResponses.Where(m => m.TicketID == ticket.TicketID).ToList();
+
+                if (responses.Count == 0 && questions.Count != 0)
+                {
+                    foreach (var question in questions)
+                    {
+                        newResponse = new CustomFormFieldResponse();
+                        newResponse.CustomFormFieldQuestionID = question.CustomFormFieldQuestionID;
+                        newResponse.TicketID = ticket.TicketID;
+                        _context.Add(newResponse);
+                    }
+                }
                 
             }
 
-            await _context.SaveChangesAsync();
-
-            // change to something like this: return PurchaseConfirmation1(userAccountID);
-            return await PurchaseConfirmation(userAccountID);
+            _context.SaveChanges();
         }
 
         private bool TicketExists(int id)
@@ -284,7 +337,6 @@ namespace phbgtu_ticketing_prototypes.Controllers
 
         public async Task<IActionResult> PurchaseConfirmationOriginal(int? ID) //pass in an ID to find the specific Ticket
         {
-
             //read in from database
             if (ID == null)
             {
@@ -298,24 +350,17 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 return NotFound();
             }
 
-
-
             //display the ticketID passed in
             ViewData["Message"] = ID;
-
             return View(ticket);
-
-
 
         }
 
 
         
 
-        public async Task<IActionResult> PurchaseConfirmation(int? userAccountID) //pass in an ID to find the specific Ticket
+        public async Task<IActionResult> PurchaseConfirmation(int? userAccountID, int? eventID) //pass in an ID to find the specific Ticket
         {
-
-
             if (userAccountID == null)
             {
                 return NotFound();
@@ -329,24 +374,68 @@ namespace phbgtu_ticketing_prototypes.Controllers
                     .SingleOrDefaultAsync(m => m.UserAccountID == userAccountID); //where
 
             viewModel.Tickets = await _context.Tickets.Include(t => t.EventTicket)  //copy tickets from the account to the viewModel Tickets
+                .Include(t => t.EventTicket)
                 .Where(m => m.UserAccountID == viewModel.account.UserAccountID).ToListAsync();
+
+            viewModel.Event = new Event();
+
+            // If an event is specified, load the event object and limit the tickets to just those for that event.
+            if (eventID != null)
+            {
+                viewModel.Event = await _context.Events.Where(m => m.EventID == eventID).SingleOrDefaultAsync();
+
+                EventTicket tempEventTicket;
+                for (int i = 0; i < viewModel.Tickets.Count(); i++)
+                {
+                    tempEventTicket = viewModel.Tickets.ElementAt(i).EventTicket;
+                    tempEventTicket.TicketDesign =
+                        await _context.TicketDesigns.Where(m => m.TicketDesignID == tempEventTicket.TicketDesignID)
+                        .SingleOrDefaultAsync();
+                }
+
+                viewModel.Tickets = viewModel.Tickets.Where(m => m.EventTicket.TicketDesign.EventID == eventID).ToList();
+
+                if (viewModel.Tickets.Count() == 0)
+                {
+                    return NotFound();
+                }
+            }
+
+
 
             viewModel.totalPrice = 0;
 
+            // Load in all of the ticket data (ticket types and form field responses)
+            // Also, calculate total order price.
             for (int i = 0; i < viewModel.Tickets.Count(); i++)
             {
                 viewModel.Tickets.ElementAt(i).EventTicket.TicketType = await _context.TicketTypes
                     .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.Tickets.ElementAt(i).EventTicket.TicketTypeID); //where
 
                 viewModel.Tickets.ElementAt(i).CustomFormFieldResponses = await _context.CustomFormFieldResponses
-                    .Where(m => m.TicketID == viewModel.Tickets.ElementAt(i).TicketID).Include(t => t.CustomFormFieldQuestion).ToListAsync();
+                    .Include(t => t.CustomFormFieldQuestion)
+                    .Where(m => m.TicketID == viewModel.Tickets.ElementAt(i).TicketID)
+                    .ToListAsync();
 
                 viewModel.totalPrice += viewModel.Tickets.ElementAt(i).EventTicket.TicketPrice;
             }
 
+            // Load the questions.
+            viewModel.questions = new List<CustomFormFieldQuestion>();
+            CustomFormFieldQuestion temp;
+            for (int i = 0; i < viewModel.Tickets.ElementAt(0).CustomFormFieldResponses.Count(); i++)
+            {
+                temp = viewModel.Tickets.ElementAt(0).CustomFormFieldResponses.ElementAt(i).CustomFormFieldQuestion;
+                temp.FormFieldDataOptions = _context.CustomFormFieldDataOptions
+                    .Where(m => m.CustomFormFieldQuestionID == temp.CustomFormFieldQuestionID)
+                    .ToList();
+                temp.FormFieldDatatype = _context.CustomFormFieldDatatypes
+                    .Where(m => m.CustomFormFieldDatatypeID == temp.FormFieldDatatypeID)
+                    .SingleOrDefault();
+                viewModel.questions.Add(temp);
+            }
 
             return View("PurchaseConfirmation", viewModel);
-
 
         } //end PurchaseConfirmation
 
@@ -406,6 +495,24 @@ namespace phbgtu_ticketing_prototypes.Controllers
             ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID", ticket.TicketStatusID);
             ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID", ticket.UserAccountID);
             return View(ticket);
+        }
+
+
+        // POST: Tickets/EditTicketsCustomer/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        // [ValidateAntiForgeryToken] // this was causing a 500 error for some reason.
+        public async Task<IActionResult> EditTicketsCustomer() // (List<Ticket> tickets, List<CustomFormFieldResponse> customFormFieldResponses)
+        {
+            // loop through the tickets, updating each in the DB.
+            // loop through the customFormFieldResponses, updating each in the DB.
+
+            // if successful: (returns empty success response)
+            return NoContent();
+
+            // otherwise:
+            // return BadRequest(); // or if there is a function that produces a HTTP 500 code, that would be better.
         }
 
 

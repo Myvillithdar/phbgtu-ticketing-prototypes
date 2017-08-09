@@ -14,6 +14,9 @@ namespace phbgtu_ticketing_prototypes.ViewModels
         public IEnumerable<Ticket> Tickets { get; set; }
         public UserAccount account { get; set; }
         public decimal totalPrice { get; set; }
+        public List<CustomFormFieldQuestion> questions { get; set; }
+        public Event Event { get; set; }
+        
         /*
         public int TicketID { get; set; }
         public int EventTicketID { get; set; }

@@ -1,9 +1,5 @@
 ﻿@model phbgtu_ticketing_prototypes.ViewModels.PurchaseConfirmationData
 
-<!--the AT model directive allows you to access the movie that the controller
-    passed to the view by using a Model object that's strongly typed.-->
-<!-- in order to add an AT symbol in razor html, you do a double @@ -->
-
 @{
     ViewData["Title"] = "Confirmation";
 }
@@ -11,74 +7,217 @@
 @if (Model.Tickets != null)
 {
 
-    <h2>Your ticket purchase was successful!</h2>
+    <h3>Your ticket purchase for "@Model.Event.EventName" was successful!</h3>
+    <br /><br />
 
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Ticket Number</th>
-                <th>Attendee Name</th>
-                <th>Ticket Type Name</th>
-                <th>Amount Paid</th>
-                <th>Date Sold</th>
-            </tr>
-        </thead>
-
-        <!--see the purchase.cshtml-->
-
-        <tbody>
-            @foreach (var item in Model.Tickets)
-            {
-                
+    <h4>Your Tickets:</h4>
+    <form id="responseForm" enctype="multipart/form-data">
+        <table class="table">
+            <thead>
                 <tr>
-                    <<td>
-                        @item.TicketNumber
-                    </td>
-                    <td>
-                        @item.AttendeeName
-                    </td>
-                    <td>
-                        @item.EventTicket.TicketType.TicketTypeName
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AmountPaid)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateSold)
-                    </td>
-                    <td>
-                        <a asp-action="PurchaseEdit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> <!--|
-                        <a asp-action="Details" asp-route-id="@@item.TicketID"><span class="fa fa-list"></span> Details</a> |
-                        <a asp-action="Delete" asp-route-id="@@item.TicketID"><span class="fa fa-remove"></span> Delete</a>-->
+                    <th>Ticket Number</th>
+                    <th>Attendee Name</th>
+                    <th>Ticket Type Name</th>
+                    <th>Amount Paid</th>
+                    <th>Date Sold</th>
+                    @foreach (var question in Model.questions)
+                    {
+                        <th>
+                            <div>@question.FormFieldLabel</div>
+                        </th>
+
+                    }
+                    <th>
+                        <div class="response">
+                            <a id="editResponses" href="#"><span class="fa fa-edit"></span> Edit</a>
+                        </div>
+                        <div class="edit hidden">
+                            <a id="saveResponses" href="#"><span class="fa fa-save"></span> Save</a>
+                            <br />
+                            <a id="cancelEdit" href="#"><span class="fa fa-times-circle"></span> Cancel</a>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Tickets)
+                {
+                
+                    <tr>
+                        <td>
+                            @item.TicketNumber
+                        </td>
+                        <td>
+                            <input name="tickets[@item.TicketID].TicketID" type="hidden" value="@item.TicketID" />
+                            <div class="response">
+                                @item.AttendeeName
+                            </div>
+                            <div class="edit hidden">
+                                <input name="tickets[@item.TicketID].AttendeeName" type="text" value="@item.AttendeeName" />
+                            </div>
+                        </td>
+                        <td>
+                            @item.EventTicket.TicketType.TicketTypeName
+                        </td>
+                        <td>
+                            &#3647; @item.AmountPaid.ToString("N")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateSold)
+                        </td>
+                        @foreach (var response in item.CustomFormFieldResponses)
+                        {
+                            <td>
+
+                                <input name="customFormFieldResponses[@response.CustomFormFieldResponseID].CustomFormFieldResponseID" type="hidden" value="@response.CustomFormFieldResponseID" />
+                                <div class="response">
+                                    @if (response.FormFieldResponse != null)
+                                    {
+                                        <span>@response.FormFieldResponse</span>
+                                    }
+                                    else
+                                    {
+                                        <span>--</span>
+                                    }
+                                </div>
+                                <div class="edit hidden">
+                                    @if (response.CustomFormFieldQuestion.FormFieldDatatype.DatatypeName == "Select")
+                                    {
+                                        <select name="customFormFieldResponses[@response.CustomFormFieldResponseID].FormFieldResponse" value="@response.FormFieldResponse">
+                                            @foreach (var option in response.CustomFormFieldQuestion.FormFieldDataOptions)
+                                            {
+                                             
+                                                @if (option.DataOptionValue == response.FormFieldResponse)
+                                                {
+                                                    <option value="@option.DataOptionValue" selected>
+                                                        @option.DataOptionValue
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@option.DataOptionValue">
+                                                        @option.DataOptionValue
+                                                    </option>
+                                                }
+
+                                            }
+                                        </select>
+                                    }
+                                    else if (response.CustomFormFieldQuestion.FormFieldDatatype.DatatypeName == "Number")
+                                    {
+                                        <input name="customFormFieldResponses[@response.CustomFormFieldResponseID].FormFieldResponse" value="@response.FormFieldResponse" type="number" />
+                                    }
+                                    else if (response.CustomFormFieldQuestion.FormFieldDatatype.DatatypeName == "Text")
+                                    {
+                                        <input name="customFormFieldResponses[@response.CustomFormFieldResponseID].FormFieldResponse" value="@response.FormFieldResponse" type="text" />
+                                    }
+
+                                </div>
+                            
+                            </td>
+
+                        }
+                        <!-- <td>
+                            <a asp-action="PurchaseEdit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
+                            <a asp-action="Details" asp-route-id="@@item.TicketID"><span class="fa fa-list"></span> Details</a> |
+                            <a asp-action="Delete" asp-route-id="@@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
+                        </td> -->
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        Total:
+                    </th>
+                    <td colspan="5">
+                        &#3647; @Model.totalPrice
                     </td>
                 </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>
-                    Total:
-                </th>
-                <td colspan="5">
-                    &#3647; @Model.totalPrice
-                </td>
-            </tr>
-        </tfoot>
+            </tfoot>
 
-    </table>
-
+        </table>
+    </form>
 }
 
+<script type="text/javascript">
+    $("#editResponses").click(function (ev) {
+        ev.preventDefault();
+        $(".edit").toggleClass("hidden", false);
+        $(".response").toggleClass("hidden", true);
+    });
 
-<!--
-    <div>
-        <a asp-action="Edit" asp-route-id="@@Model.account.UserAccountID">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
+    $("#cancelEdit").click(function (ev) {
+        ev.preventDefault();
+        $(".edit").toggleClass("hidden", true);
+        $(".response").toggleClass("hidden", false);
+    });
 
-    <!--<p>The value of your ticketID is:  @@ViewData["Message"]</p>-->
+    $("#saveResponses").click(function (ev) {
+        ev.preventDefault();
+        $(".edit").toggleClass("hidden", true);
+        $(".response").toggleClass("hidden", false);
+        saveResponses(this);
 
--->
+    });
+
+    function saveResponses(el)
+    {   
+        var postData = $("#responseForm").serializeArray();
+
+        var formData = new FormData();
+
+        $.each(postData, function (index, value) {
+            formData.append(value.name, value.value);
+        });
+
+        $.ajax({
+            url: "EditTicketsCustomer",
+            type: "POST",
+            processData: false,
+            data: formData,
+            contentType: "multipart/form-data; boundary=----WebKitFormBoundary01KABtRVAqfGBsdP",
+            success: function (data)
+            {
+                // Update the ".response" divs' contents to be the same as the provided response in the .edit
+                updateFields();
+            },
+            'failure': function (data, textStatus, jqXHR)
+            {
+                // do nothing(?)
+            }
+        });
+    }
+
+    function updateFields()
+    {
+        $.each($("#responseForm").children("table").children("tbody").children("tr"), function (index, tr)
+        {
+            $.each($(tr).children(), function (index, element)
+            {
+                var response = $(element).find(".response");
+                var edit = $(element).find(".edit");
+                var value;
+                if (edit.length > 0)
+                {
+                    if ($(edit).find("select").length > 0)
+                    {
+                        value = $($(edit).find("select")[0]).val();
+                    }
+                    else
+                    {
+                        value = $($(edit).find("input")[0]).val();
+                    }
+
+                    $(response).html(value);
+
+                }
+            });
+        });
+
+    }
+</script>
+
 
 
