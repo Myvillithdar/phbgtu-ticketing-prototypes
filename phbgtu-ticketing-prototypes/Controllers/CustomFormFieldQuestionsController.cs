@@ -42,6 +42,10 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 return NotFound();
             }
 
+            customFormFieldQuestion.FormFieldDataOptions = await _context.CustomFormFieldDataOptions
+                .Where(m => m.CustomFormFieldQuestionID == customFormFieldQuestion.CustomFormFieldQuestionID)
+                .ToListAsync();
+
             return View(customFormFieldQuestion);
         }
 
@@ -56,7 +60,8 @@ namespace phbgtu_ticketing_prototypes.Controllers
             }
 
             ViewData["FormFieldDatatypeID"] = new SelectList(_context.CustomFormFieldDatatypes, "CustomFormFieldDatatypeID", "DatatypeName");
-            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "DesignName");
+            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "DesignName",
+                _context.TicketDesigns.Where(m => m.TicketDesignID == id).SingleOrDefault());
             return View(customFormFieldQuestion);
         }
 
@@ -90,7 +95,8 @@ namespace phbgtu_ticketing_prototypes.Controllers
             {
                 return NotFound();
             }
-            ViewData["FormFieldDatatypeID"] = new SelectList(_context.CustomFormFieldDatatypes, "CustomFormFieldDatatypeID", "CustomFormFieldDatatypeID", customFormFieldQuestion.FormFieldDatatypeID);
+            ViewData["FormFieldDatatypeID"] = new SelectList(_context.CustomFormFieldDatatypes, "CustomFormFieldDatatypeID", "DatatypeName", customFormFieldQuestion.FormFieldDatatypeID);
+            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "DesignName", customFormFieldQuestion.TicketDesignID);
             return View(customFormFieldQuestion);
         }
 
