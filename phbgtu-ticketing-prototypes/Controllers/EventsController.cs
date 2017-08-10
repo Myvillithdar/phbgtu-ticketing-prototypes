@@ -38,19 +38,31 @@ namespace phbgtu_ticketing_prototypes.Controllers
             viewModel.ticketEvent = await _context.Events
                 .SingleOrDefaultAsync(m => m.EventID == id);
             TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
-            viewModel.eventTickets = await _context.EventTickets.Where(m => m.TicketDesignID == td.TicketDesignID).ToListAsync();
+            viewModel.eventTickets = await _context.EventTickets
+                .Include(t => t.TicketType)
+                .Where(m => m.TicketDesignID == td.TicketDesignID)
+                .ToListAsync();
 
-		  viewModel.tickets = new List<Ticket>();
-		  foreach (EventTicket et in viewModel.eventTickets) {
-				List<Ticket> tickets = await _context.Tickets.Where(m => m.EventTicketID == et.EventTicketID).ToListAsync();
-				foreach (Ticket t in tickets) {
-					((List<Ticket>)viewModel.tickets).Add(t);
-				}
-		  }
+		    viewModel.tickets = new List<Ticket>();
+            EventTicket et;
+            for (int i = 0; i < viewModel.eventTickets.Count(); i++)
+            {
+                et = viewModel.eventTickets.ElementAt(i);
 
-		  foreach (var et in viewModel.eventTickets) {
-				et.TicketType = await _context.TicketTypes.SingleOrDefaultAsync(m => m.TicketTypeID == et.TicketTypeID);
-		  }
+			    List<Ticket> tickets = await _context.Tickets
+                    .Include(t => t.TicketStatus)
+                    .Where(m => m.EventTicketID == et.EventTicketID)
+                    .ToListAsync();
+
+                et.QuantitySold = tickets.Count();
+                et.QuantityRemaining = et.QuantityAvailable - et.QuantitySold;
+                et.TicketType = await _context.TicketTypes.SingleOrDefaultAsync(m => m.TicketTypeID == et.TicketTypeID);
+
+                foreach (Ticket t in tickets) {
+                    t.EventTicket = et;
+				    ((List<Ticket>)viewModel.tickets).Add(t);
+			    }
+		    }
 
             // var @event = await _context.Events
             //   .SingleOrDefaultAsync(m => m.EventID == id);
