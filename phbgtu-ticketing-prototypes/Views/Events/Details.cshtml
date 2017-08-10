@@ -160,7 +160,7 @@
                 @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserAccount.UserAccountID)
+                @Html.DisplayFor(modelItem => item.UserAccount.EmailAddress)
             </td>
             <td>
                 <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |

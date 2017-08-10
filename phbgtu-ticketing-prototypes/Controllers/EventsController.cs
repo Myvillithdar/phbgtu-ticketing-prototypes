@@ -44,6 +44,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
 		  foreach (EventTicket et in viewModel.eventTickets) {
 				List<Ticket> tickets = await _context.Tickets.Where(m => m.EventTicketID == et.EventTicketID).ToListAsync();
 				foreach (Ticket t in tickets) {
+					t.UserAccount = await _context.UserAccounts.SingleOrDefaultAsync(m => m.UserAccountID == t.UserAccountID);
 					((List<Ticket>)viewModel.tickets).Add(t);
 				}
 		  }
