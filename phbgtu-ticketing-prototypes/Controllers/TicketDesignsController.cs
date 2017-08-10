@@ -46,13 +46,15 @@ namespace phbgtu_ticketing_prototypes.Controllers
             try
             {
                 ticketDesign.CustomFormFields = _context.CustomFormFieldQuestions
-                    .Where(m => m.TicketDesignID == id);
+                    .Where(m => m.TicketDesignID == id).ToList();
                 for (int i = 0; i < ticketDesign.CustomFormFields.Count(); i++)
                 {
                     ticketDesign.CustomFormFields.ElementAt(i).FormFieldDataOptions = _context.CustomFormFieldDataOptions
-                        .Where(m => m.CustomFormFieldQuestionID == ticketDesign.CustomFormFields.ElementAt(i).CustomFormFieldQuestionID);
+                        .Where(m => m.CustomFormFieldQuestionID == ticketDesign.CustomFormFields.ElementAt(i).CustomFormFieldQuestionID)
+                        .ToList();
                     ticketDesign.CustomFormFields.ElementAt(i).FormFieldDatatype = _context.CustomFormFieldDatatypes
-                        .Where(m => m.CustomFormFieldDatatypeID == ticketDesign.CustomFormFields.ElementAt(i).CustomFormFieldQuestionID).SingleOrDefault();
+                        .Where(m => m.CustomFormFieldDatatypeID == ticketDesign.CustomFormFields.ElementAt(i).FormFieldDatatypeID)
+                        .SingleOrDefault();
                 }
             }
             catch (Exception ex)
