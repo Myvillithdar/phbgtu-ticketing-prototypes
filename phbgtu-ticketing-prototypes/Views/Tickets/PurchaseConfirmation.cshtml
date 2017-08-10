@@ -1,118 +1,282 @@
-﻿@model phbgtu_ticketing_prototypes.Models.Ticket 
+﻿@model phbgtu_ticketing_prototypes.ViewModels.PurchaseConfirmationData
 
-<!--the AT model directive allows you to access the movie that the controller 
-    passed to the view by using a Model object that's strongly typed.-->
-
-<!-- in order to add an AT symbol in razor html, you do a double @@ -->
-       
 @{
     ViewData["Title"] = "Confirmation";
 }
 
-<h2>Your ticket purchase was successful!</h2>
+@if (Model.Tickets != null)
+{
+
+    <h3>Your ticket purchase for "@Model.Event.EventName" was successful!</h3>
+    <br /><br />
+
+    <h4>Your Tickets:</h4>
+    <form id="responseForm" enctype="multipart/form-data">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ticket Number</th>
+                    <th>Attendee Name</th>
+                    <th>Ticket Type Name</th>
+                    <th>Amount Paid</th>
+                    <th>Date Sold</th>
+                    @foreach (var question in Model.questions)
+                    {
+                        <th>
+                            <div>@question.FormFieldLabel</div>
+                        </th>
+
+                    }
+                    <th>
+                        <div class="response">
+                            <a id="editResponses" href="#"><span class="fa fa-edit"></span> Edit</a>
+                        </div>
+                        <div class="edit hidden">
+                            <a id="saveResponses" href="#"><span class="fa fa-save"></span> Save</a>
+                            <br />
+                            <a id="cancelEdit" href="#"><span class="fa fa-times-circle"></span> Cancel</a>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Tickets)
+                {
+                
+                    <tr>
+                        <td>
+                            @item.TicketNumber
+                        </td>
+                        <td>
+                            <input name="tickets[@item.TicketID].TicketID" type="hidden" value="@item.TicketID" />
+                            <div class="response">
+                                @item.AttendeeName
+                            </div>
+                            <div class="edit hidden">
+                                <input name="tickets[@item.TicketID].AttendeeName" type="text" value="@item.AttendeeName" />
+                            </div>
+                        </td>
+                        <td>
+                            @item.EventTicket.TicketType.TicketTypeName
+                        </td>
+                        <td>
+                            &#3647; @item.AmountPaid.ToString("N")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateSold)
+                        </td>
+                        @foreach (var response in item.CustomFormFieldResponses)
+                        {
+                            <td>
+
+                                <input name="customFormFieldResponses[@response.CustomFormFieldResponseID].CustomFormFieldResponseID" type="hidden" value="@response.CustomFormFieldResponseID" />
+                                <div class="response">
+                                    @if (response.FormFieldResponse != null)
+                                    {
+                                        <span>@response.FormFieldResponse</span>
+                                    }
+                                    else
+                                    {
+                                        <span>--</span>
+                                    }
+                                </div>
+                                <div class="edit hidden">
+                                    @if (response.CustomFormFieldQuestion.FormFieldDatatype.DatatypeName == "Select")
+                                    {
+                                        <select name="customFormFieldResponses[@response.CustomFormFieldResponseID].FormFieldResponse" value="@response.FormFieldResponse">
+                                            @foreach (var option in response.CustomFormFieldQuestion.FormFieldDataOptions)
+                                            {
+                                             
+                                                @if (option.DataOptionValue == response.FormFieldResponse)
+                                                {
+                                                    <option value="@option.DataOptionValue" selected>
+                                                        @option.DataOptionValue
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@option.DataOptionValue">
+                                                        @option.DataOptionValue
+                                                    </option>
+                                                }
+
+                                            }
+                                        </select>
+                                    }
+                                    else if (response.CustomFormFieldQuestion.FormFieldDatatype.DatatypeName == "Number")
+                                    {
+                                        <input name="customFormFieldResponses[@response.CustomFormFieldResponseID].FormFieldResponse" value="@response.FormFieldResponse" type="number" />
+                                    }
+                                    else if (response.CustomFormFieldQuestion.FormFieldDatatype.DatatypeName == "Text")
+                                    {
+                                        <input name="customFormFieldResponses[@response.CustomFormFieldResponseID].FormFieldResponse" value="@response.FormFieldResponse" type="text" />
+                                    }
+
+                                </div>
+                            
+                            </td>
+
+                        }
+                        <!-- <td>
+                            <a asp-action="PurchaseEdit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
+                            <a asp-action="Details" asp-route-id="@@item.TicketID"><span class="fa fa-list"></span> Details</a> |
+                            <a asp-action="Delete" asp-route-id="@@item.TicketID"><span class="fa fa-remove"></span> Delete</a>
+                        </td> -->
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>
+                        Total:
+                    </th>
+                    <td colspan="5">
+                        &#3647; @Model.totalPrice
+                    </td>
+                </tr>
+            </tfoot>
+
+        </table>
+    </form>
+    <div class="hidden">
+        <form id="myJsonForm">
+            <input id="myJson" name="myJson" type="hidden" />
+        </form>
+    </div>
+}
+
+<script type="text/javascript">
+    $("#editResponses").click(function (ev) {
+        ev.preventDefault();
+        $(".edit").toggleClass("hidden", false);
+        $(".response").toggleClass("hidden", true);
+    });
+
+    $("#cancelEdit").click(function (ev) {
+        ev.preventDefault();
+        $(".edit").toggleClass("hidden", true);
+        $(".response").toggleClass("hidden", false);
+    });
+
+    $("#saveResponses").click(function (ev) {
+        ev.preventDefault();
+        $(".edit").toggleClass("hidden", true);
+        $(".response").toggleClass("hidden", false);
+        saveResponses(this);
+
+    });
+
+    // sends the AJAX request to update the ticket and response data.
+    function saveResponses(el)
+    {   
+        var postData = $("#responseForm").serializeArray();
+        var formData = new FormData();
+        $.each(postData, function (index, value) {
+            formData.append(value.name, value.value);
+        });
+
+        $("#myJson").val(serializeForm());
+        formData = $("#myJsonForm").serialize();
+
+        $.ajax({
+            url: "EditTicketsCustomer",
+            type: "POST",
+            data: formData,
+            success: function (data)
+            {
+                // Update the ".response" divs' contents to be the same as the provided response in the .edit
+                updateFields();
+            },
+            'failure': function (data, textStatus, jqXHR)
+            {
+                alert("Unable to save changes.");
+            }
+        });
+    }
+
+    // turns the form data into a JSON string.
+    function serializeForm()
+    {
+        var myJSON;
+        var myArray = [];
+        myArray["responses"] = [];
+        myArray["tickets"] = [];
+        var ticketIndex = 0;
+        var responseIndex = 0;
+        var name;
+        var value;
+        var isTicket = false;
+        var isResponse = false;
+        var tdJSON;
+
+        $.each($("td"), function (index, td) {
+            tdJSON = {};
+            $.each($(td).find("input, select"), function (index, input) {
+                name = $(input).attr("name");
+                value = $(input).val();
+
+                if (name.includes("Response")) {
+                    isResponse = true;
+                }
+                else if (name.includes("tickets")) {
+                    isTicket = true;
+                }
+
+                if (name.includes("ID")) {
+                    tdJSON.id = value;
+                }
+                else {
+                    tdJSON.value = value;
+                }
+
+            });
+
+            if (isTicket) {
+                myArray["tickets"][ticketIndex++] = tdJSON;
+                // alert(JSON.stringify(myArray["tickets"][ticketIndex - 1]));
+            }
+            else if (isResponse) {
+                myArray["responses"][responseIndex++] = tdJSON;
+            }
+
+            isTicket = false;
+            isResponse = false;
+        });
+
+        myJSON = '{"responses":' + JSON.stringify(myArray["responses"]) + ', "tickets":' + JSON.stringify(myArray["tickets"]) + "}";
+
+        return myJSON;
+    }
+
+    function updateFields()
+    {
+        $.each($("#responseForm").children("table").children("tbody").children("tr"), function (index, tr)
+        {
+            $.each($(tr).children(), function (index, element)
+            {
+                var response = $(element).find(".response");
+                var edit = $(element).find(".edit");
+                var value;
+                if (edit.length > 0)
+                {
+                    if ($(edit).find("select").length > 0)
+                    {
+                        value = $($(edit).find("select")[0]).val();
+                    }
+                    else
+                    {
+                        value = $($(edit).find("input")[0]).val();
+                    }
+
+                    $(response).html(value);
+
+                }
+            });
+        });
+
+    }
+</script>
 
 
 
-<div>
-    <h4>Ticket</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TicketID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TicketID)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.EventTicketID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EventTicketID)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UserAccountID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UserAccountID)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TicketStatusID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TicketStatusID)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.AmountPaid)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.AmountPaid)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DateSold)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DateSold)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.AttendeeName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.AttendeeName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TicketNumber)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TicketNumber)
-        </dd>
-    </dl>
-</div>
-
-
-
-
-<!--   This is the code that works with our first database
-<div>
-    <h4>Ticket</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @@Html.DisplayNameFor(model => model.TicketID)
-        </dt>
-        <dd>
-            @@Html.DisplayFor(model => model.TicketID)
-        </dd>
-        <dt>
-            @@Html.DisplayNameFor(model => model.EventTicketNumber)
-        </dt>
-        <dd>
-            @@Html.DisplayFor(model => model.EventTicketNumber)
-        </dd>
-        <dt>
-            @@Html.DisplayNameFor(model => model.EventTicketCode)
-        </dt>
-        <dd>
-            @@Html.DisplayFor(model => model.EventTicketCode)
-        </dd>
-        <dt>
-            @@Html.DisplayNameFor(model => model.TicketEventID)
-        </dt>
-        <dd>
-            @@Html.DisplayFor(model => model.TicketEventID)
-        </dd>
-    </dl>
-</div>
--->
-
-
-
-
-
-
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.TicketID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-
-<!--<p>The value of your ticketID is:  @@ViewData["Message"]</p>-->

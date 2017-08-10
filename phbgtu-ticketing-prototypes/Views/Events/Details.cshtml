@@ -37,7 +37,12 @@
 
 <br />
 <hr />
+<h3>Ticket Details</h3>
 
+<br />
+<div>
+    <a asp-controller="TicketDesigns" asp-action="Details" asp-route-id="@Model.ticketEvent.EventID"><span class="fa fa-edit"></span> Click here</a> to view and edit ticket details, such as custom form fields.
+</div>
 <br />
 
 @if (Model.eventTickets != null)
@@ -51,12 +56,15 @@
                     Ticket Type
                 </th>
                 <th>
-                    Total Quantity Available
+                    Quantity Available
                 </th>
-			 <th>
-				Price per Ticket
-		      </th>
-		      <th>
+			    <th>
+				    Price per Ticket
+		        </th>
+                <th>
+                    Total Revenue
+                </th>
+		        <th>
                     Available Online
                 </th>
                 <th>
@@ -80,10 +88,16 @@
                             @Html.DisplayFor(modelItem => item.TicketType.TicketTypeName)
                         </td>
                         <td>
+                            @Html.DisplayFor(modelItem => item.QuantityRemaining) /
                             @Html.DisplayFor(modelItem => item.QuantityAvailable)
                         </td>
-				    <td>
-                            @Html.DisplayFor(modelItem => item.TicketPrice)
+				        <td>
+                            &#3647;
+                            @(item.TicketPrice.ToString("C").Replace("$", ""))
+                        </td>
+                        <td>
+                            &#3647;
+                            @(Decimal.Multiply(item.TicketPrice, item.QuantitySold).ToString("C").Replace("$",""))
                         </td>
                         <td>
                             @(item.AvailableOnline ? "Yes" : "No")
@@ -107,7 +121,7 @@
 
 <br />
 
-<h3>Tickets for this Event</h3>
+<h4>Tickets for this Event</h4>
 
 @if (Model.tickets != null) {
 
@@ -115,7 +129,7 @@
     <thead>
         <tr>
             <th>
-                Amount Paid
+                Type
             </th>
             <th>
                 Date Sold
@@ -127,22 +141,18 @@
                 Ticket Number
             </th>
             <th>
-                Type
+                Status
             </th>
             <th>
-                Ticket Status
-            </th>
-            <th>
-                User Account
-            </th>
-            <th></th>
+			 User Account
+		  </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.tickets) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.AmountPaid)
+                @Html.DisplayFor(modelItem => item.EventTicket.TicketType.TicketTypeName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateSold)
@@ -154,10 +164,7 @@
                 @Html.DisplayFor(modelItem => item.TicketNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EventTicket.TicketType.TicketTypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusID)
+		      @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserAccount.EmailAddress)

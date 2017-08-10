@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
 using phbgtu_ticketing_prototypes.ViewModels;
+using Newtonsoft.Json.Linq;
 //add ViewModel signature
-using phbgtu_ticketing_prototypes.Models.ViewModels;
 
 namespace phbgtu_ticketing_prototypes.Controllers
 {
@@ -233,43 +233,98 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // POST: Tickets/Purchase
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Purchase(List<Ticket> tickets, int userAccountID, int[] ticketQuantity)
+        public async Task<IActionResult> Purchase(List<Ticket> tickets, int userAccountID, int eventID, int[] ticketQuantity)
         {
             int ticketStatusID = (await _context.TicketStatuses
                 .SingleOrDefaultAsync(m => m.TicketStatusName == "Sold")).TicketStatusID;
+            
+            
 
             Ticket ticket;
             Ticket newTicket;
+            List<EventTicket> eventTickets = new List<EventTicket>();
             EventTicket eventTicket;
             DateTime dateSold = DateTime.Now;
 
             for (int i = 0; i < tickets.Count(); i++)
             {
                 ticket = tickets.ElementAt(i);
-                eventTicket = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == ticket.EventTicketID);
-
-                for (int j = 0; j < ticketQuantity[i]; j++)
-                {
-                    /* make a quantity loop here that will create new ticket objects,
-                     * assign them their values, then add them to the DB context.
-                     * After the loop, save changes to the DB context.
-                    */
-                    newTicket = new Ticket();
-                    newTicket.UserAccountID = userAccountID;
-                    newTicket.TicketStatusID = ticketStatusID;
-                    newTicket.EventTicketID = eventTicket.EventTicketID;
-                    newTicket.AmountPaid = eventTicket.TicketPrice;
-                    newTicket.DateSold = dateSold;
-                    newTicket.AttendeeName = "";
-                    newTicket.TicketNumber = Ticket.GenerateTicketNumber();
-                    _context.Add(newTicket);
-                }
+                eventTickets.Add(await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == ticket.EventTicketID));
             }
 
-            await _context.SaveChangesAsync();
+            for (int i = 0; i < tickets.Count(); i++)
+            {
+                ticket = tickets.ElementAt(i);
+                eventTicket = eventTickets.SingleOrDefault(m => m.EventTicketID == ticket.EventTicketID);
+
+                try
+                {
+                    for (int j = 0; j < ticketQuantity[i]; j++)
+                    {
+                        /* make a quantity loop here that will create new ticket objects,
+                         * assign them their values, then add them to the DB context.
+                         * After the loop, save changes to the DB context.
+                        */
+                        newTicket = new Ticket();
+                        newTicket.UserAccountID = userAccountID;
+                        newTicket.TicketStatusID = ticketStatusID;
+                        newTicket.EventTicketID = eventTicket.EventTicketID;
+                        newTicket.AmountPaid = eventTicket.TicketPrice;
+                        newTicket.DateSold = dateSold;
+                        newTicket.AttendeeName = "";
+                        newTicket.TicketNumber = Ticket.GenerateTicketNumber();
+                        _context.Add(newTicket);
+                    }
+
+                    _context.SaveChanges();
+                    // Adds default blank responses for all tickets (if applicable).
+                    AddInitialResponses(eventTicket);
+                }
+                catch (IndexOutOfRangeException ex) { }
+
+            }
 
             // change to something like this: return PurchaseConfirmation1(userAccountID);
-            return RedirectToAction("PurchaseConfirmation1/" + userAccountID);
+            return RedirectToAction("PurchaseConfirmation", new { userAccountID = userAccountID, eventID = eventID });
+            // return await PurchaseConfirmation(userAccountID, eventID);
+        }
+
+        /// <summary>
+        /// Adds blank responses for all tickets that have questions, but no responses.
+        /// </summary>
+        /// <param name="eventTicket"></param>
+        private void AddInitialResponses(EventTicket eventTicket)
+        {
+            List<CustomFormFieldQuestion> questions;
+            List<Ticket> tickets;
+            List<CustomFormFieldResponse> responses;
+            CustomFormFieldResponse newResponse;
+
+
+            // Add placeholders for the CustomFormFieldResponses.
+            questions = _context.CustomFormFieldQuestions
+                .Where(m => m.TicketDesignID == eventTicket.TicketDesignID)
+                .ToList();
+            tickets = _context.Tickets.Where(m => m.EventTicketID == eventTicket.EventTicketID).ToList();
+
+            foreach (var ticket in tickets)
+            {
+                responses = _context.CustomFormFieldResponses.Where(m => m.TicketID == ticket.TicketID).ToList();
+
+                if (responses.Count == 0 && questions.Count != 0)
+                {
+                    foreach (var question in questions)
+                    {
+                        newResponse = new CustomFormFieldResponse();
+                        newResponse.CustomFormFieldQuestionID = question.CustomFormFieldQuestionID;
+                        newResponse.TicketID = ticket.TicketID;
+                        _context.Add(newResponse);
+                    }
+                }
+                
+            }
+
+            _context.SaveChanges();
         }
 
         private bool TicketExists(int id)
@@ -278,9 +333,8 @@ namespace phbgtu_ticketing_prototypes.Controllers
         }
 
 
-        public async Task<IActionResult> PurchaseConfirmation(int? ID) //pass in an ID to find the specific Ticket
+        public async Task<IActionResult> PurchaseConfirmationOriginal(int? ID) //pass in an ID to find the specific Ticket
         {
-
             //read in from database
             if (ID == null)
             {
@@ -294,46 +348,17 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 return NotFound();
             }
 
-
-
             //display the ticketID passed in
             ViewData["Message"] = ID;
-
             return View(ticket);
-
-
 
         }
 
 
-        /*
-            
-            if (id == null)
-            {
-                return NotFound();
-            }
-            EventTicketPurchaseData viewModel = new EventTicketPurchaseData();
+        
 
-            viewModel.Event = await _context.Events.SingleOrDefaultAsync(m => m.EventID == id);
-            viewModel.TicketDesign = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.EventID == id);
-            viewModel.EventTickets = await _context.EventTickets
-                .Where(m => m.TicketDesignID == viewModel.TicketDesign.TicketDesignID).ToListAsync();
-            
-            for (int i = 0; i < viewModel.EventTickets.Count(); i++)
-            {
-                viewModel.EventTickets.ElementAt(i).TicketType = await _context.TicketTypes
-                    .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.EventTickets.ElementAt(i).TicketTypeID);
-            }
-
-            return View(viewModel);
-
-
-        */
-
-        public async Task<IActionResult> PurchaseConfirmation1(int? userAccountID) //pass in an ID to find the specific Ticket
+        public async Task<IActionResult> PurchaseConfirmation(int? userAccountID, int? eventID) //pass in an ID to find the specific Ticket
         {
-
-
             if (userAccountID == null)
             {
                 return NotFound();
@@ -347,126 +372,176 @@ namespace phbgtu_ticketing_prototypes.Controllers
                     .SingleOrDefaultAsync(m => m.UserAccountID == userAccountID); //where
 
             viewModel.Tickets = await _context.Tickets.Include(t => t.EventTicket)  //copy tickets from the account to the viewModel Tickets
+                .Include(t => t.EventTicket)
                 .Where(m => m.UserAccountID == viewModel.account.UserAccountID).ToListAsync();
 
+            viewModel.Event = new Event();
 
+            // If an event is specified, load the event object and limit the tickets to just those for that event.
+            if (eventID != null)
+            {
+                viewModel.Event = await _context.Events.Where(m => m.EventID == eventID).SingleOrDefaultAsync();
+
+                EventTicket tempEventTicket;
+                for (int i = 0; i < viewModel.Tickets.Count(); i++)
+                {
+                    tempEventTicket = viewModel.Tickets.ElementAt(i).EventTicket;
+                    tempEventTicket.TicketDesign =
+                        await _context.TicketDesigns.Where(m => m.TicketDesignID == tempEventTicket.TicketDesignID)
+                        .SingleOrDefaultAsync();
+                }
+
+                viewModel.Tickets = viewModel.Tickets.Where(m => m.EventTicket.TicketDesign.EventID == eventID).ToList();
+
+                if (viewModel.Tickets.Count() == 0)
+                {
+                    return NotFound();
+                }
+            }
+
+
+
+            viewModel.totalPrice = 0;
+
+            // Load in all of the ticket data (ticket types and form field responses)
+            // Also, calculate total order price.
             for (int i = 0; i < viewModel.Tickets.Count(); i++)
             {
                 viewModel.Tickets.ElementAt(i).EventTicket.TicketType = await _context.TicketTypes
                     .SingleOrDefaultAsync(m => m.TicketTypeID == viewModel.Tickets.ElementAt(i).EventTicket.TicketTypeID); //where
 
                 viewModel.Tickets.ElementAt(i).CustomFormFieldResponses = await _context.CustomFormFieldResponses
-                    .Where(m => m.TicketID == viewModel.Tickets.ElementAt(i).TicketID).Include(t => t.CustomFormFieldQuestion).ToListAsync();
+                    .Include(t => t.CustomFormFieldQuestion)
+                    .Where(m => m.TicketID == viewModel.Tickets.ElementAt(i).TicketID)
+                    .ToListAsync();
 
+                viewModel.totalPrice += viewModel.Tickets.ElementAt(i).EventTicket.TicketPrice;
             }
 
-
-            return View(viewModel);
-
-
-
-            /*
-            var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
-            await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
-            foreach (Ticket ticket in selectedUser.Tickets)
+            // Load the questions.
+            viewModel.questions = new List<CustomFormFieldQuestion>();
+            CustomFormFieldQuestion temp;
+            for (int i = 0; i < viewModel.Tickets.ElementAt(0).CustomFormFieldResponses.Count(); i++)
             {
-                await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
+                temp = viewModel.Tickets.ElementAt(0).CustomFormFieldResponses.ElementAt(i).CustomFormFieldQuestion;
+                temp.FormFieldDataOptions = _context.CustomFormFieldDataOptions
+                    .Where(m => m.CustomFormFieldQuestionID == temp.CustomFormFieldQuestionID)
+                    .ToList();
+                temp.FormFieldDatatype = _context.CustomFormFieldDatatypes
+                    .Where(m => m.CustomFormFieldDatatypeID == temp.FormFieldDatatypeID)
+                    .SingleOrDefault();
+                viewModel.questions.Add(temp);
             }
-            viewModel.Tickets = selectedUser.Tickets;
-            */
 
-            /* //my original code from 3 AM
-            
+            return View("PurchaseConfirmation", viewModel);
 
-            var viewModel = new PurchaseConfirmationData();
-
-            viewModel.UserAccounts = await _context.UserAccounts
-                    .Include(i => i.Tickets)
-                  .ToListAsync();
-
-            //viewModel.
+        } //end PurchaseConfirmation
 
 
-            if (userAccountID == null)
+        // GET: Tickets/PurchaseEdit/5
+        public async Task<IActionResult> PurchaseEdit(int? id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
-            else
-            {
-                ViewData["UserAcountID"] = userAccountID.Value;
 
-                UserAccount user = viewModel.UserAccounts.Where(
-                    i => i.UserAccountID == userAccountID.Value).Single(); //find the user who has the userAccountID?
-                viewModel.Tickets = user.Tickets//.Select(s => s.Ticket);
-
-
-                
-                //var selectedUser = viewModel.UserAccounts.Where(x => x.UserAccountID == userAccountID).Single(); //find the entry in the UserAccount table?
-                //await _context.Entry(selectedUser).Collection(x => x.Tickets).LoadAsync(); //find the Tickets associated with that user?
-                //foreach (Ticket ticket in selectedUser.Tickets)
-                //{
-                //    await _context.Entry(ticket).Reference(x => x.Student).LoadAsync();
-                //}
-                //viewModel.Tickets = selectedUser.Tickets;
-                
-        }
-
-            */
-
-
-
-            //*******************************************************************************************
-
-            //other ideas:
-
-
-            /*//find out the userAcount
-            UserAccount = _context.UserAccounts.Include(x => x.Tickets)
-                (m => m.EmailAddress.Equals(email));
-            */
-
-            //read in from database
-
-
-
-            //create a view model of user accounts and tickets
-            //get copy of user accounts
-            //include
-            //filter to single results
-
-
-            //find out what the user acount ID is first
-            //based on that user id, look up all the tickets associated with it.
-            /*
-            var tickets = await _context.Tickets
-                .Include(Tickets)
-                */
-
-            //(m => email.Equals(m.EmailAddress));
-
-            //make sure something was found before returning it
-
-
-            /*
-             
-               var ticket = await _context.Tickets
-                .SingleOrDefaultAsync(m => m.TicketID == ID);
+            var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.TicketID == id);
             if (ticket == null)
             {
                 return NotFound();
             }
-    
-            */
+            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "EventTicketID", ticket.EventTicketID);
+            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID", ticket.TicketStatusID);
+            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID", ticket.UserAccountID);
+            return View(ticket);
+        }
+
+        // POST: Tickets/PurchaseEdit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PurchaseEdit(int id, [Bind("TicketID,EventTicketID,UserAccountID,TicketStatusID,AmountPaid,DateSold,AttendeeName,TicketNumber")] Ticket ticket)
+        {
+            if (id != ticket.TicketID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(ticket);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TicketExists(ticket.TicketID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("PurchaseConfirmation", new { userAccountID = ticket.UserAccountID.ToString() });
+            }
+            ViewData["EventTicketID"] = new SelectList(_context.EventTickets, "EventTicketID", "EventTicketID", ticket.EventTicketID);
+            ViewData["TicketStatusID"] = new SelectList(_context.TicketStatuses, "TicketStatusID", "TicketStatusID", ticket.TicketStatusID);
+            ViewData["UserAccountID"] = new SelectList(_context.UserAccounts, "UserAccountID", "UserAccountID", ticket.UserAccountID);
+            return View(ticket);
+        }
 
 
+        // POST: Tickets/EditTicketsCustomer/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        // [ValidateAntiForgeryToken] // this was causing a 500 error for some reason.
+        public async Task<IActionResult> EditTicketsCustomer(string myJson)
+        {
+            try
+            {
+                JObject json = JObject.Parse(myJson);
 
+                // loops through the JSON object from the View and updates all of the tickets and custom form field responses.
+                foreach (var set in json)
+                {
+                    foreach (var item in set.Value)
+                    {
+                        if (set.Key == "responses")
+                        {
+                            var id = item.Value<int>("id");
+                            var response = _context.CustomFormFieldResponses
+                                .Where(m => m.CustomFormFieldResponseID == id)
+                                .Single();
+                            response.FormFieldResponse = item.Value<string>("value");
+                            _context.Update(response);
+                        }
+                        if (set.Key == "tickets")
+                        {
+                            var id = item.Value<int>("id");
+                            var ticket = _context.Tickets
+                                .Where(m => m.TicketID == id)
+                                .Single();
+                            ticket.AttendeeName = item.Value<string>("value");
+                            _context.Update(ticket);
+                        }
+                    }
+                }
+                _context.SaveChanges();
 
-            //display the ticketID passed in
-            //ViewData["Message"] = email;
-
-
-
-
+                // if successful: (returns empty success response)
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // if it fails, returns a "Bad Request" response.
+                return BadRequest();
+            }
 
         }
 

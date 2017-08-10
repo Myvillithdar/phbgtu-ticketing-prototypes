@@ -13,15 +13,15 @@
         <fieldset id="" class="form-horizontal">
             <h3>Contact Information</h3>
             <div class="control-group">
-                <label class="control-label" for="EmailAddress"><strong>Email Address</strong></label>
-                <div class="controls">
-                    <input name="EmailAddress" type="text" />
-                </div>
-            </div>
-            <div class="control-group">
                 <label class="control-label" for="UserName"><strong>Name</strong></label>
                 <div class="controls">
                     <input name="UserName" type="text" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="EmailAddress"><strong>Email Address</strong></label>
+                <div class="controls">
+                    <input name="EmailAddress" type="text" />
                 </div>
             </div>
         </fieldset>
@@ -91,14 +91,15 @@
             </table>
 
             <input type="hidden" name="userAccountID" id="userAccountID" />
+            <input type="hidden" name="eventID" id="eventID" value="@Model.Event.EventID" />
 
             <div id="payment-div" class="hidden">
                 <div id="paypal-button"></div>
                 <div id="confirm" style="display: none;">
-                    <div>Ship to:</div>
+                    <div>Confirm your purchase</div>
                     <div><span id="recipient"></span>, <span id="line1"></span>, <span id="city"></span></div>
                     <div><span id="state"></span>, <span id="zip"></span>, <span id="country"></span></div>
-                    <button id="confirmButton" onclick="getUserAccount(this, event); return false;">Complete Payment</button>
+                    <button hidden="hidden" id="confirmButton" onclick="getUserAccount(this, event); return false;">Complete Payment</button>
                 </div>
                 <div id="thanks" style="display: none;">
                     Thanks, <span id="thanksname"></span>!
@@ -141,10 +142,11 @@
                                 document.querySelector('#zip').innerText = shipping.postal_code;
                                 document.querySelector('#country').innerText = shipping.country_code;
 
-                                document.querySelector('#paypal-button').style.display = 'none';
-                                document.querySelector('#confirm').style.display = 'block';
+                                
 
                                 // Listen for click on confirm button
+
+                                document.querySelector('#confirmButton').click();
 
                                 document.querySelector('#confirmButton').addEventListener('click', function () {
 
@@ -163,6 +165,7 @@
 
                                         document.querySelector('#confirm').style.display = 'none';
                                         document.querySelector('#thanks').style.display = 'block';
+
                                     });
                                 });
                             });
@@ -224,9 +227,7 @@
     $(function () {
         var maxTicketsPerCustomer = 10;
         var option = "<option value=\"{#}\">{#}</option>";
-        $("select[name=numTickets]").append(option.replace(/\{#\}/g, ' '));
-        $("select.TicketQuantity").append(option.replace(/\{#\}/g, ' '));
-        for (var i = 1; i <= maxTicketsPerCustomer; i++) {
+        for (var i = 0; i <= maxTicketsPerCustomer; i++) {
             $("select[name=numTickets]").append(option.replace(/\{#\}/g, i));
             $("select.TicketQuantity").append(option.replace(/\{#\}/g, i));
         }
@@ -248,7 +249,7 @@
         return attendeeFieldContent.join("").replace(/\{#\}/g, index);
     }
 
-    $("select[name=numTickets]").change(function () {
+    $("select[name=nu&mTickets]").change(function () {
 
         var attendeeFields = $(".attendee-field");
         var attendeeFieldCount = attendeeFields.length;
@@ -332,6 +333,12 @@
         $("#payment-div").toggleClass("hidden", (parseFloat(total) < 1));
     }
 
+    function calculatePrice() {
+        var attendeeCount = $("option:selected", this).val();
+        var CountAfterMath = (attendeeCount * 168);
+        var FinalCount = (PayPalFinalAmount + ".00").toString();
+        return FinalCount;
+    }
 
     // Uses AJAX to query the UserAccountID from the DB, filtering by the customer's email.
     function getUserAccount(el, ev) {

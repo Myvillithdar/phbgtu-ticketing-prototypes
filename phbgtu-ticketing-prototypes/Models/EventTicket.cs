@@ -27,7 +27,13 @@ namespace phbgtu_ticketing_prototypes.Models
         [NotMapped]
 		public ICollection<Ticket> Tickets { get; set; }
 
-		public EventTicket() {
+        [NotMapped]
+        public int QuantitySold { get; set; }
+
+        [NotMapped]
+        public int QuantityRemaining { get; set; }
+
+        public EventTicket() {
 
 		}
 	}
