@@ -70,14 +70,26 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomFormFieldQuestionID,TicketDesignID,FormFieldLabel,FormFieldDatatypeID,FormFieldRequired")] CustomFormFieldQuestion customFormFieldQuestion)
+        public async Task<IActionResult> Create(int? id, [Bind("TicketDesignID,FormFieldLabel,FormFieldDatatypeID,FormFieldRequired")] CustomFormFieldQuestion customFormFieldQuestion)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(customFormFieldQuestion);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                customFormFieldQuestion.FormFieldDatatype = await _context.CustomFormFieldDatatypes
+                    .Where(m => m.CustomFormFieldDatatypeID == customFormFieldQuestion.FormFieldDatatypeID).SingleAsync();
+                if (customFormFieldQuestion.FormFieldDatatype.DatatypeName == "Select")
+                {
+                    return RedirectToAction("Details", new { id = customFormFieldQuestion.CustomFormFieldQuestionID });
+                }
+                else if (id != null)
+                {
+                    return RedirectToAction("Details", "TicketDesigns", new { id = customFormFieldQuestion.CustomFormFieldQuestionID });
+                }
+                // return RedirectToAction("Index");
             }
+
+            ViewData["TicketDesignID"] = new SelectList(_context.TicketDesigns, "TicketDesignID", "TicketDesignName");
             ViewData["FormFieldDatatypeID"] = new SelectList(_context.CustomFormFieldDatatypes, "CustomFormFieldDatatypeID", "CustomFormFieldDatatypeID", customFormFieldQuestion.FormFieldDatatypeID);
             return View(customFormFieldQuestion);
         }

@@ -48,9 +48,13 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // GET: CustomFormFieldDataOptions/Create
         public IActionResult Create(int? ID)
         {
+            CustomFormFieldDataOption customFormFieldDataOption = new CustomFormFieldDataOption();
+            customFormFieldDataOption.CustomFormFieldQuestionID = ID.Value;
+            customFormFieldDataOption.CustomFormFieldQuestion = _context.CustomFormFieldQuestions
+                .Where(m => m.CustomFormFieldQuestionID == ID).Single();
             ViewData["CustomFormFieldQuestionID"] = new SelectList(_context.CustomFormFieldQuestions, "CustomFormFieldQuestionID", "FormFieldLabel", 
                 _context.CustomFormFieldQuestions.Where(m => m.CustomFormFieldQuestionID == ID).SingleOrDefault());
-            return View();
+            return View(customFormFieldDataOption);
         }
 
         // POST: CustomFormFieldDataOptions/Create
@@ -58,15 +62,17 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomFormFieldDataOptionID,CustomFormFieldQuestionID,DataOptionValue")] CustomFormFieldDataOption customFormFieldDataOption)
+        public async Task<IActionResult> Create(int? id, [Bind("CustomFormFieldDataOptionID,CustomFormFieldQuestionID,DataOptionValue")] CustomFormFieldDataOption customFormFieldDataOption)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(customFormFieldDataOption);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "CustomFormFieldQuestions", new { id = id });
             }
-            ViewData["CustomFormFieldQuestionID"] = new SelectList(_context.CustomFormFieldQuestions, "CustomFormFieldQuestionID", "CustomFormFieldQuestionID", customFormFieldDataOption.CustomFormFieldQuestionID);
+            customFormFieldDataOption.CustomFormFieldQuestion = await _context.CustomFormFieldQuestions
+                .Where(m => m.CustomFormFieldQuestionID == id).SingleAsync();
+            ViewData["CustomFormFieldQuestionID"] = new SelectList(_context.CustomFormFieldQuestions, "CustomFormFieldQuestionID", "FormFieldLabel", customFormFieldDataOption.CustomFormFieldQuestionID);
             return View(customFormFieldDataOption);
         }
 

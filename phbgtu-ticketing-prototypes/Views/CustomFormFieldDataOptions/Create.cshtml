@@ -4,21 +4,22 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2><span class="fa fa-plus"></span> Create</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
-        <h4>CustomFormFieldDataOption</h4>
+        <h4>Custom Form Field Response Option for "@Model.CustomFormFieldQuestion.FormFieldLabel"</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="CustomFormFieldQuestionID" class="col-md-2 control-label"></label>
+        <div class="form-group hidden">
+            <label asp-for="CustomFormFieldQuestionID" class="col-md-2 control-label">Question</label>
             <div class="col-md-10">
-                <select asp-for="CustomFormFieldQuestionID" class ="form-control" asp-items="ViewBag.CustomFormFieldQuestionID"></select>
+                <!--<select asp-for="CustomFormFieldQuestionID" class ="form-control" asp-items="ViewBag.CustomFormFieldQuestionID"></select>-->
+                <input type="hidden" name="CustomFormFieldQuestionID" value="@Model.CustomFormFieldQuestionID"/>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="DataOptionValue" class="col-md-2 control-label"></label>
+            <label asp-for="DataOptionValue" class="col-md-2 control-label">New Option Value</label>
             <div class="col-md-10">
                 <input asp-for="DataOptionValue" class="form-control" />
                 <span asp-validation-for="DataOptionValue" class="text-danger"></span>
