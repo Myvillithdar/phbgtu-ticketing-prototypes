@@ -76,7 +76,7 @@
             @if (Model.eventTickets.Count() == 0)
             {
                 <tr>
-                    <td colspan="4">No ticket types or available quantities are set for this event. <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID">Click here</a> to add ticket types and quantities to this event.</td>
+                    <td colspan="6">No ticket types or available quantities are set for this event. <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID">Click here</a> to add ticket types and quantities to this event.</td>
                 </tr>
 
             }
@@ -107,7 +107,7 @@
                     </tr>
                 }
                 <tr>
-                    <td colspan="4">
+                    <td colspan="6">
                         <a asp-controller="EventTickets" asp-action="Create" asp-route-id="@Model.ticketEvent.EventID"><span class="fa fa-plus"></span> Click here</a> to add ticket types and available quantities to this event.
                     </td>
                 </tr>

@@ -84,7 +84,7 @@ namespace phbgtu_ticketing_prototypes.Controllers
                 }
                 else if (id != null)
                 {
-                    return RedirectToAction("Details", "TicketDesigns", new { id = customFormFieldQuestion.CustomFormFieldQuestionID });
+                    return RedirectToAction("Details", "TicketDesigns", new { id = customFormFieldQuestion.TicketDesignID });
                 }
                 // return RedirectToAction("Index");
             }
