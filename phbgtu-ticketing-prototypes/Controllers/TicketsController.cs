@@ -179,10 +179,12 @@ namespace phbgtu_ticketing_prototypes.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.TicketID == id);
+		  EventTicket et = await _context.EventTickets.SingleOrDefaultAsync(m => m.EventTicketID == ticket.EventTicketID);
+		  TicketDesign td = await _context.TicketDesigns.SingleOrDefaultAsync(m => m.TicketDesignID == et.TicketDesignID);
             _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+            return RedirectToAction("Details", "Events", new { id = td.EventID });
+		}
 
         // POST: Save Ticket
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
