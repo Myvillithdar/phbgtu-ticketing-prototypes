@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using phbgtu_ticketing_prototypes.Data;
 using phbgtu_ticketing_prototypes.Models;
 using phbgtu_ticketing_prototypes.ViewModels;
+using Newtonsoft.Json.Linq;
 //add ViewModel signature
 
 namespace phbgtu_ticketing_prototypes.Controllers
@@ -500,16 +501,48 @@ namespace phbgtu_ticketing_prototypes.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         // [ValidateAntiForgeryToken] // this was causing a 500 error for some reason.
-        public async Task<IActionResult> EditTicketsCustomer() // (List<Ticket> tickets, List<CustomFormFieldResponse> customFormFieldResponses)
+        public async Task<IActionResult> EditTicketsCustomer(string myJson)
         {
-            // loop through the tickets, updating each in the DB.
-            // loop through the customFormFieldResponses, updating each in the DB.
+            try
+            {
+                JObject json = JObject.Parse(myJson);
 
-            // if successful: (returns empty success response)
-            return NoContent();
+                // loops through the JSON object from the View and updates all of the tickets and custom form field responses.
+                foreach (var set in json)
+                {
+                    foreach (var item in set.Value)
+                    {
+                        if (set.Key == "responses")
+                        {
+                            var id = item.Value<int>("id");
+                            var response = _context.CustomFormFieldResponses
+                                .Where(m => m.CustomFormFieldResponseID == id)
+                                .Single();
+                            response.FormFieldResponse = item.Value<string>("value");
+                            _context.Update(response);
+                        }
+                        if (set.Key == "tickets")
+                        {
+                            var id = item.Value<int>("id");
+                            var ticket = _context.Tickets
+                                .Where(m => m.TicketID == id)
+                                .Single();
+                            ticket.AttendeeName = item.Value<string>("value");
+                            _context.Update(ticket);
+                        }
+                    }
+                }
+                _context.SaveChanges();
 
-            // otherwise:
-            // return BadRequest(); // or if there is a function that produces a HTTP 500 code, that would be better.
+                // if successful: (returns empty success response)
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // if it fails, returns a "Bad Request" response.
+                return BadRequest();
+            }
+
         }
 
 

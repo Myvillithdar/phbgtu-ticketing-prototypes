@@ -139,6 +139,11 @@
 
         </table>
     </form>
+    <div class="hidden">
+        <form id="myJsonForm">
+            <input id="myJson" name="myJson" type="hidden" />
+        </form>
+    </div>
 }
 
 <script type="text/javascript">
@@ -162,22 +167,22 @@
 
     });
 
+    // sends the AJAX request to update the ticket and response data.
     function saveResponses(el)
     {   
         var postData = $("#responseForm").serializeArray();
-
         var formData = new FormData();
-
         $.each(postData, function (index, value) {
             formData.append(value.name, value.value);
         });
 
+        $("#myJson").val(serializeForm());
+        formData = $("#myJsonForm").serialize();
+
         $.ajax({
             url: "EditTicketsCustomer",
             type: "POST",
-            processData: false,
             data: formData,
-            contentType: "multipart/form-data; boundary=----WebKitFormBoundary01KABtRVAqfGBsdP",
             success: function (data)
             {
                 // Update the ".response" divs' contents to be the same as the provided response in the .edit
@@ -185,9 +190,63 @@
             },
             'failure': function (data, textStatus, jqXHR)
             {
-                // do nothing(?)
+                alert("Unable to save changes.");
             }
         });
+    }
+
+    // turns the form data into a JSON string.
+    function serializeForm()
+    {
+        var myJSON;
+        var myArray = [];
+        myArray["responses"] = [];
+        myArray["tickets"] = [];
+        var ticketIndex = 0;
+        var responseIndex = 0;
+        var name;
+        var value;
+        var isTicket = false;
+        var isResponse = false;
+        var tdJSON;
+
+        $.each($("td"), function (index, td) {
+            tdJSON = {};
+            $.each($(td).find("input, select"), function (index, input) {
+                name = $(input).attr("name");
+                value = $(input).val();
+
+                if (name.includes("Response")) {
+                    isResponse = true;
+                }
+                else if (name.includes("tickets")) {
+                    isTicket = true;
+                }
+
+                if (name.includes("ID")) {
+                    tdJSON.id = value;
+                }
+                else {
+                    tdJSON.value = value;
+                }
+
+            });
+
+            if (isTicket) {
+                myArray["tickets"][ticketIndex++] = tdJSON;
+                // alert(JSON.stringify(myArray["tickets"][ticketIndex - 1]));
+            }
+            else if (isResponse) {
+                myArray["responses"][responseIndex++] = tdJSON;
+            }
+
+            isTicket = false;
+            isResponse = false;
+        });
+
+        myJSON = '{"responses":' + JSON.stringify(myArray["responses"]) + ', "tickets":' + JSON.stringify(myArray["tickets"]) + "}";
+
+        return myJSON;
     }
 
     function updateFields()
