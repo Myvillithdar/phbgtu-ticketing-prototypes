@@ -91,13 +91,11 @@
                             @Html.DisplayFor(modelItem => item.QuantityRemaining) /
                             @Html.DisplayFor(modelItem => item.QuantityAvailable)
                         </td>
-				        <td>
-                            &#3647;
-                            @(item.TicketPrice.ToString("C").Replace("$", ""))
+                        <td>
+                           @Html.DisplayFor(modelItem => item.TicketPrice)
                         </td>
                         <td>
-                            &#3647;
-                            @(Decimal.Multiply(item.TicketPrice, item.QuantitySold).ToString("C").Replace("$",""))
+                            &#3647;@(Decimal.Multiply(item.TicketPrice, item.QuantitySold))
                         </td>
                         <td>
                             @(item.AvailableOnline ? "Yes" : "No")

@@ -48,7 +48,9 @@ namespace phbgtu_ticketing_prototypes.Controllers
 					t.TicketStatus = await _context.TicketStatuses.SingleOrDefaultAsync(m => m.TicketStatusID == t.TicketStatusID);
 					((List<Ticket>)viewModel.tickets).Add(t);
 				}
-		  }
+				et.QuantitySold = tickets.Count();
+				et.QuantityRemaining = et.QuantityAvailable - et.QuantitySold;
+			}
 
 		  foreach (var et in viewModel.eventTickets) {
 				et.TicketType = await _context.TicketTypes.SingleOrDefaultAsync(m => m.TicketTypeID == et.TicketTypeID);
