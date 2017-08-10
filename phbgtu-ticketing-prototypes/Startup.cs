@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
 using phbgtu_ticketing_prototypes.Data;
+using System.Globalization;
 
 namespace phbgtu_ticketing_prototypes
 {
@@ -46,6 +48,12 @@ namespace phbgtu_ticketing_prototypes
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+			app.UseRequestLocalization(new RequestLocalizationOptions {
+				DefaultRequestCulture = new RequestCulture("th"),
+				SupportedCultures = new[] { new CultureInfo("th") },
+				SupportedUICultures = new[] { new CultureInfo("th") }
+			});
 
             app.UseStaticFiles();
 

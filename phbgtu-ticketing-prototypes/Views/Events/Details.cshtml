@@ -129,7 +129,7 @@
     <thead>
         <tr>
             <th>
-                Ticket Type
+                Type
             </th>
             <th>
                 Date Sold
@@ -141,9 +141,11 @@
                 Ticket Number
             </th>
             <th>
-                Ticket Status
+                Status
             </th>
-            <th></th>
+            <th>
+			 User Account
+		  </th>
         </tr>
     </thead>
     <tbody>
@@ -162,7 +164,10 @@
                 @Html.DisplayFor(modelItem => item.TicketNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusName)
+		      @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAccount.EmailAddress)
             </td>
             <td>
                 <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.TicketID"><span class="fa fa-edit"></span> Edit</a> |
