@@ -127,7 +127,7 @@
                 Ticket Number
             </th>
             <th>
-                Event Ticket
+                Type
             </th>
             <th>
                 Ticket Status
@@ -154,7 +154,7 @@
                 @Html.DisplayFor(modelItem => item.TicketNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EventTicket.EventTicketID)
+                @Html.DisplayFor(modelItem => item.EventTicket.TicketType.TicketTypeName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TicketStatus.TicketStatusID)
