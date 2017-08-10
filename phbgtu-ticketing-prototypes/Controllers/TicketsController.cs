@@ -274,17 +274,14 @@ namespace phbgtu_ticketing_prototypes.Controllers
                         newTicket.TicketNumber = Ticket.GenerateTicketNumber();
                         _context.Add(newTicket);
                     }
-                    
+
+                    _context.SaveChanges();
                     // Adds default blank responses for all tickets (if applicable).
                     AddInitialResponses(eventTicket);
                 }
                 catch (IndexOutOfRangeException ex) { }
 
             }
-
-            _context.SaveChanges();
-
-
 
             // change to something like this: return PurchaseConfirmation1(userAccountID);
             return RedirectToAction("PurchaseConfirmation", new { userAccountID = userAccountID, eventID = eventID });
